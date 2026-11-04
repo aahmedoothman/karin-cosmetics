@@ -1,0 +1,2 @@
+import {allProducts,settings} from './server';
+export async function publicCatalog(){const [ps,s]=await Promise.all([allProducts(),settings()]);const products=ps.filter(p=>p.active).map(({revision,...p})=>({...p,...(p.contentState!=='approved'?{descriptionAr:'',descriptionEn:''}:{})}));const {revision,...shop}=s;if(shop.contentState!=='approved')for(const k of ['specsAr','specsEn','usageAr','usageEn','returnsAr','returnsEn'])shop[k]='';return {products,settings:shop};}

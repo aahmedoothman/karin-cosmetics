@@ -1,0 +1,5 @@
+'use client';
+import {useEffect,useRef,type ReactNode} from 'react';
+import {X} from 'lucide-react';
+export function Modal({title,close,children}:{title:string;close:()=>void;children:ReactNode}){const r=useRef<HTMLDialogElement>(null);const closeRef=useRef(close);closeRef.current=close;useEffect(()=>{const previous=document.activeElement as HTMLElement;const el=r.current;el?.showModal();const overflow=document.body.style.overflow;document.body.style.overflow='hidden';return()=>{document.body.style.overflow=overflow;previous?.focus();};},[]);return <dialog ref={r} aria-label={title} onCancel={e=>{e.preventDefault();closeRef.current();}} onClick={e=>{if(e.target===r.current)closeRef.current();}}><div className="dialog-head"><h2>{title}</h2><button className="icon" aria-label="إغلاق / Close" onClick={close}><X/></button></div>{children}</dialog>;}
+export async function api(path:string,options:RequestInit={}){const r=await fetch(path,{...options,signal:options.signal||AbortSignal.timeout(20000)});const d:any=await r.json();if(!r.ok){const e:any=new Error(d.error||'UNAVAILABLE');e.fields=d.fields;throw e;}return d;}

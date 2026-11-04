@@ -1,21 +1,10 @@
-import {allProducts,settings,db,json,sameOrigin} from '../../../lib/server';
-import {governorates} from '../../../lib/catalog';
-export async function POST(req:Request){
- if(!sameOrigin(req))return json({error:'FORBIDDEN'},403);
- try{
- if(Number(req.headers.get('content-length')||0)>20000)return json({error:'INVALID'},400);
- const b=await req.json() as any;const c=b.customer||{};const clean=(v:any,max:number)=>typeof v==='string'?v.trim().slice(0,max):'';
- const phone=clean(c.phone,30).replace(/[٠-٩]/g,(x:string)=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(x))).replace(/[\s()-]/g,'').replace(/^\+?20/,'0');
- if(!/^[a-f0-9-]{36}$/i.test(b.requestKey||'')||!b.consent||b.website||clean(c.name,100).length<5||!/^01[0125]\d{8}$/.test(phone)||!governorates.includes(c.governorate)||clean(c.city,100).length<2||clean(c.street,200).length<5||!clean(c.building,50)||!clean(c.floor,50)||!clean(c.apartment,50)||!Array.isArray(b.items)||!b.items.length||b.items.length>30)return json({error:'INVALID'},400);
- const existing=await db().prepare('SELECT id FROM orders WHERE request_key=?').bind(b.requestKey).first();if(existing)return json({id:existing.id});
- const s=await settings();if(!s.acceptOrders)return json({error:'PAUSED'},409);
- const products=await allProducts();const seen=new Set();let total=0;const items=[];
- for(const item of b.items){const p=products.find(x=>x.id===item.id&&x.active);if(!p||seen.has(item.id)||!Number.isInteger(item.qty)||item.qty<1||item.qty>20)return json({error:'PRODUCT_CHANGED'},409);if(item.price!==p.price)return json({error:'PRICE_CHANGED'},409);seen.add(item.id);items.push({id:p.id,ar:p.ar,en:p.en,qty:item.qty,price:p.price});total+=p.price*item.qty;}
- const ip=req.headers.get('cf-connecting-ip')||'local';const hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(ip));const key=Array.from(new Uint8Array(hash)).map(x=>x.toString(16).padStart(2,'0')).join('')+':'+Math.floor(Date.now()/3600000);
- await db().prepare('DELETE FROM limits WHERE expires<?').bind(Date.now()).run();
- const count=await db().prepare('INSERT INTO limits(id,count,expires) VALUES(?,1,?) ON CONFLICT(id) DO UPDATE SET count=count+1 RETURNING count').bind(key,Date.now()+3600000).first();if(Number(count?.count)>8)return json({error:'RATE_LIMIT'},429);
- const id='KR-'+crypto.randomUUID().slice(0,8).toUpperCase();const created=new Date().toISOString();
- const data={items,subtotal:total,shippingFee:s.shippingFee,customer:{name:clean(c.name,100),phone,whatsapp:!!c.whatsapp,email:clean(c.email,150),governorate:c.governorate,city:clean(c.city,100),street:clean(c.street,200),building:clean(c.building,50),floor:clean(c.floor,50),apartment:clean(c.apartment,50),landmark:clean(c.landmark,200),notes:clean(c.notes,1000)},consentAt:created,tracking:'',shippingStatus:'not_sent',paymentStatus:'unpaid'};
- await db().prepare('INSERT INTO orders(id,request_key,data,status,created) VALUES(?,?,?,?,?)').bind(id,b.requestKey,JSON.stringify(data),'pending',created).run();return json({id},201);
- }catch{return json({error:'SAVE_FAILED'},503);}
-}
+
+import {allProducts,settings,db,json,sameOrigin,body,hash,rateLimit,diagnostic,now} from '../../../lib/server';
+import {customerErrors,cleanCustomer,normalize} from '../../../lib/commerce';
+export async function POST(req:Request){if(!sameOrigin(req))return json({error:'FORBIDDEN'},403);try{const b=await body(req,20000);if(!/^[a-f0-9-]{36}$/i.test(b.requestKey||'')||!/^[a-f0-9]{64}$/.test(b.receiptToken||''))return json({error:'INVALID_ATTEMPT'},400);
+const receiptHash=await hash(b.receiptToken);const existing=await db().prepare('SELECT id,receipt_hash FROM orders WHERE request_key=?').bind(b.requestKey).first();if(existing)return existing.receipt_hash===receiptHash?json({id:existing.id}):json({error:'ATTEMPT_CONFLICT'},409);
+if(!await rateLimit(req))return json({error:'RATE_LIMIT'},429);const fields=customerErrors(b.customer||{});if(Object.keys(fields).length||b.consent!==true||b.website)return json({error:'INVALID',fields},400);if(!Array.isArray(b.items)||!b.items.length||b.items.length>30)return json({error:'INVALID_ITEMS'},400);const shop=await settings();if(!shop.acceptOrders)return json({error:'PAUSED'},409);
+const products=await allProducts(),seen=new Set();let subtotal=0;const items=[];for(const item of b.items){const p=products.find(p=>p.id===item.id&&p.active);if(!p||seen.has(item.id)||!Number.isInteger(item.qty)||item.qty<1||item.qty>20)return json({error:'PRODUCT_CHANGED'},409);if(p.price!==item.price)return json({error:'PRICE_CHANGED'},409);seen.add(item.id);items.push({id:p.id,ar:p.ar,en:p.en,qty:item.qty,price:p.price});subtotal+=item.qty*p.price;}
+const customer=cleanCustomer(b.customer);const id='KR-'+crypto.randomUUID().replaceAll('-','').slice(0,16).toUpperCase();const created=now();const data={customer,items,subtotal,shippingFee:null,paymentMethod:'cod',paymentStatus:'unpaid',collected:0,consentAt:created,tracking:'',shippingStatus:'not_sent',phoneConfirmedAt:null,adminNotes:''};const requestHash=await hash(JSON.stringify({customer,items}));
+await db().prepare('INSERT OR IGNORE INTO orders(id,request_key,data,status,created,receipt_hash,request_hash,search_text) VALUES(?,?,?,?,?,?,?,?)').bind(id,b.requestKey,JSON.stringify(data),'pending',created,receiptHash,requestHash,normalize(id+' '+customer.name+' '+customer.phone)).run();const saved=await db().prepare('SELECT id,receipt_hash FROM orders WHERE request_key=?').bind(b.requestKey).first();if(!saved||saved.receipt_hash!==receiptHash)return json({error:'ATTEMPT_CONFLICT'},409);return json({id:saved.id},201);
+}catch(e){diagnostic('create-order',e);return json({error:'SAVE_FAILED'},503);}}
