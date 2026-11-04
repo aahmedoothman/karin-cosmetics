@@ -1,0 +1,2 @@
+import {bucket} from '../../../../lib/server';
+export async function GET(req:Request,{params}:{params:Promise<{key:string}>}){const {key}=await params;if(!/^[a-f0-9-]+\.(png|jpg|webp)$/.test(key))return new Response(null,{status:404});const f=await bucket().get(key);return f?new Response(f.body,{headers:{'Content-Type':f.httpMetadata?.contentType||'image/jpeg','Cache-Control':'public,max-age=31536000,immutable','X-Content-Type-Options':'nosniff'}}):new Response(null,{status:404});}
