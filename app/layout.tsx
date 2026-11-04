@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import "./bold.css";
+import "./brand-b.css";
 
 export const metadata: Metadata = {
   title: "Karin Cosmetics | Colour, considered. | ألوان تعبّر عنك",
