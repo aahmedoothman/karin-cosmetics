@@ -24,7 +24,7 @@ const worker = {
       };
     }
     const response=await runWithConnectorBinding(binding, () => handler.fetch(request, env, ctx));
-    const headers=new Headers(response.headers);headers.set('Referrer-Policy','no-referrer');headers.set('X-Content-Type-Options','nosniff');headers.set('Permissions-Policy','camera=(), microphone=(), geolocation=()');if(request.url.includes('/admin')||request.url.includes('/receipt/'))headers.set('X-Robots-Tag','noindex, nofollow');
+    const headers=new Headers(response.headers);headers.set('Content-Security-Policy',"frame-ancestors 'self' https://chatgpt.com https://*.chatgpt.com https://chat.openai.com; object-src 'none'; base-uri 'self'");headers.set('Referrer-Policy','no-referrer');headers.set('X-Content-Type-Options','nosniff');headers.set('Permissions-Policy','camera=(), microphone=(), geolocation=()');if(request.url.includes('/admin')||request.url.includes('/receipt/'))headers.set('X-Robots-Tag','noindex, nofollow');
     return new Response(response.body,{status:response.status,statusText:response.statusText,headers});
   },
 };

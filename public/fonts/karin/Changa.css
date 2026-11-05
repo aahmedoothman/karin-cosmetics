@@ -3,33 +3,33 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(Changa-0.ttf) format('truetype');
+  src: url('/fonts/karin/Changa-0.ttf') format('truetype');
 }
 @font-face {
   font-family: 'Changa';
   font-style: normal;
   font-weight: 500;
   font-display: swap;
-  src: url(Changa-1.ttf) format('truetype');
+  src: url('/fonts/karin/Changa-1.ttf') format('truetype');
 }
 @font-face {
   font-family: 'Changa';
   font-style: normal;
   font-weight: 600;
   font-display: swap;
-  src: url(Changa-2.ttf) format('truetype');
+  src: url('/fonts/karin/Changa-2.ttf') format('truetype');
 }
 @font-face {
   font-family: 'Changa';
   font-style: normal;
   font-weight: 700;
   font-display: swap;
-  src: url(Changa-3.ttf) format('truetype');
+  src: url('/fonts/karin/Changa-3.ttf') format('truetype');
 }
 @font-face {
   font-family: 'Changa';
   font-style: normal;
   font-weight: 800;
   font-display: swap;
-  src: url(Changa-4.ttf) format('truetype');
+  src: url('/fonts/karin/Changa-4.ttf') format('truetype');
 }

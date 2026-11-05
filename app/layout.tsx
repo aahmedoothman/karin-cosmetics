@@ -18,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl" suppressHydrationWarning>
-      <head><script dangerouslySetInnerHTML={{__html:"try{var l=location.pathname.split('/')[1];document.documentElement.lang=l==='en'?'en':'ar';document.documentElement.dir=l==='en'?'ltr':'rtl';var s=localStorage.getItem('karin-theme');document.documentElement.dataset.theme=s||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.dataset.motion=matchMedia('(prefers-reduced-motion:reduce)').matches||localStorage.getItem('karin-motion')==='off'?'off':'on';}catch(e){}"}}/></head>
+      <head><script dangerouslySetInnerHTML={{__html:"var l=location.pathname.split('/')[1];if(l==='receipt')l=new URLSearchParams(location.search).get('lang')||'ar';document.documentElement.lang=l==='en'?'en':'ar';document.documentElement.dir=l==='en'?'ltr':'rtl';var theme='',motion='';try{theme=localStorage.getItem('karin-theme')||'';motion=localStorage.getItem('karin-motion')||'';}catch(e){}document.documentElement.dataset.theme=['dark','light'].includes(theme)?theme:(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light');document.documentElement.dataset.motion=matchMedia('(prefers-reduced-motion:reduce)').matches||motion==='off'?'off':'on';"}}/></head>
       <body className="antialiased">{children}</body>
     </html>
   );
