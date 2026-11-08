@@ -138,3 +138,13 @@
 .campaign-receipt .admin-card {background:var(--surface);border-color:var(--line);border-radius:24px}
 .campaign-receipt .summary-line {font-size:16px}
 .campaign-receipt .secondary {min-height:44px;background:var(--surface);color:var(--ink);border-color:var(--line)}
+.campaign-receipt .receipt-steps {display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:16px 0 22px}
+.campaign-receipt .receipt-steps li {padding:6px 12px;border:1px solid var(--line);border-radius:999px;color:var(--muted);font-size:14px}
+.campaign-receipt .receipt-steps li[aria-current] {border-color:var(--accent);color:var(--ink);background:var(--soft);font-weight:700}
+.campaign-store[dir=ltr] .campaign-copy .campaign-price {direction:ltr}
+@media(prefers-reduced-motion:reduce) {
+  .campaign-bottles a {transition:none}
+  .campaign-bottles a:hover {transform:none}
+}
+:root[data-motion=off] .campaign-bottles a {transition:none}
+:root[data-motion=off] .campaign-bottles a:hover {transform:none}

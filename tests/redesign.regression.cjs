@@ -14,7 +14,8 @@ function load(file){file=path.resolve(file);if(cache[file])return cache[file].ex
   vm.runInNewContext('(function(require,module,exports){'+code+'})',{Request,Response,Headers,crypto,TextEncoder,TextDecoder,console,URL,URLSearchParams,Uint8Array,AbortSignal,Date},{filename:file})(req,m,m.exports);return m.exports;
 }
 const ok=(value,label)=>{assert.ok(value,label);passed++;};
-const {filterState,filterQuery,productImage,boundProduct}=load('lib/storefront.ts');
+const {filterState,filterQuery,productImage,boundProduct,currency}=load('lib/storefront.ts');
+const {allProducts}=load('lib/server.ts');
 const {normalize,customerErrors}=load('lib/commerce.ts');
 const orders=load('app/api/orders/route.ts'),recover=load('app/api/orders/recover/route.ts');
 const customer={name:'QA isolated only',phone:'01000000000',governorate:'القاهرة',city:'QA city',street:'QA test street',building:'1',addressType:'villa',whatsapp:false};
@@ -26,11 +27,14 @@ const request=(body,url='/api/orders')=>new Request('https://test.local'+url,{me
   ok(normalize('  أَزْرَق   ')==='ازرق','Arabic normalisation');
   ok(productImage('/assets/colors/blue.jpg',320)==='/assets/optimized/blue-320.webp','image uses original file, not product identifier');
   ok(productImage('/api/media/test.webp')==='/api/media/test.webp','uploaded image preserved');
+  ok(currency(100.5,'en').includes('100.5'),'checkout preserves fractional prices');
   ok(boundProduct([{id:'blue'}],{id:'blue'},'archived')===undefined,'missing binding never substitutes selected product');
   ok(!Object.keys(customerErrors(customer)).length,'house does not require apartment or floor');
   ok(Object.keys(customerErrors({...customer,addressType:'apartment'})).includes('floor'),'apartment needs floor');
   ok(!Object.keys(customerErrors({...customer,addressType:'work'})).length,'work address supported');
   const first=attempt();let r=await orders.POST(request(first));ok(r.status===201,'guest order accepted');const saved=await r.json();
+  r=await orders.POST(request(null));ok(r.status===400,'null payload rejected as client error');
+  r=await orders.POST(request({...attempt(),items:[null]}));ok(r.status===400,'invalid cart row rejected as client error');
   r=await orders.POST(request(first));ok((await r.json()).id===saved.id,'same attempt returns same saved order');
   ok(sqlite.prepare('SELECT count(*) n FROM orders').get().n===1,'no duplicate after retry');
   // The response is deliberately discarded; recovery simulates reconnecting after save.
@@ -45,6 +49,9 @@ const request=(body,url='/api/orders')=>new Request('https://test.local'+url,{me
   ok(sqlite.prepare('SELECT count(*) n FROM orders').get().n===before+1,'concurrent retry saves one order');
   const blue={id:'blue',ar:'أزرق',en:'Blue',image:'/assets/colors/blue.jpg',price:120,active:true,parentId:'karin-colour',contentState:'approved'};
   sqlite.prepare('INSERT INTO products(id,data,revision,updated) VALUES(?,?,1,?)').run('blue',JSON.stringify(blue),new Date().toISOString());
+  ok((await allProducts()).find(p=>p.id==='blue').image==='/assets/bottles/blue.png','legacy image upgraded');
+  sqlite.prepare('UPDATE products SET data=? WHERE id=?').run(JSON.stringify({...blue,image:'/assets/colors/purple.jpg'}),'blue');
+  ok((await allProducts()).find(p=>p.id==='blue').image==='/assets/colors/purple.jpg','admin-selected image preserved');
   r=await orders.POST(request(attempt()));ok(r.status===409&&(await r.json()).error==='PRICE_CHANGED','server rejects changed price');
   sqlite.prepare('UPDATE products SET data=? WHERE id=?').run(JSON.stringify({...blue,price:100,active:false}),'blue');
   r=await orders.POST(request(attempt()));ok(r.status===409&&(await r.json()).error==='PRODUCT_CHANGED','server rejects archived shade');

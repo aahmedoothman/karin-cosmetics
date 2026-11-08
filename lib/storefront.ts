@@ -1,14 +1,21 @@
 export type Language = 'ar' | 'en';
+export const maxOrderLines = 30;
 export const shadeAliases: Record<string, string> = {
   purple: 'بنفسجي بنفسجى موف violet mauve',
   'blue-black': 'اسود ازرق اسود مزرق كحلي midnight navy',
   'golden-yellow': 'ذهبي دهبي اصفر gold yellow',
   burgundy: 'نبيتي عنابي خمري wine red',
   'fiery-red': 'احمر ناري red scarlet',
+  pink: 'بينك وردي pink rose',
+  fuchsia: 'فوشيا فوشيه فوشي magenta',
+  'red-mauve': 'احمر موف plum red',
+  violet: 'بنفسجي بنفسجى violet purple',
+  gray: 'رصاصي فضي سيلفر grey silver',
+  aubergine: 'باذنجاني بتنجاني eggplant',
 };
 export function currency(value: number, language: Language) {
   return new Intl.NumberFormat(language === 'ar' ? 'ar-EG' : 'en-EG', {
-    style: 'currency', currency: 'EGP', maximumFractionDigits: 0,
+    style: 'currency', currency: 'EGP', minimumFractionDigits: 0, maximumFractionDigits: 2,
   }).format(value);
 }
 export function productImage(source: string, width = 640) {
