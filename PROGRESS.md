@@ -36,3 +36,17 @@ No production customer records or real shipments were used. The checked-in migra
 - External setup: Bosta credentials and pickup address; verified business contact details and approved policies/specifications; optional analytics and notification accounts.
 - QA limits: physical iPhone/Safari and a controlled production shipping test have not been performed. No live staging site is configured.
 - Next implementation step: implement a coupon vertical slice, starting with isolated schema and server tests for transaction-safe usage limits, then carry the discount snapshot through checkout, confirmation, receipt, shipping and reports.
+
+## Recovery and catalog import milestone — 2026-11-09
+
+Recovery confirmed a clean development checkout at bc96785af5ab2b1d3eae5ac034aa5f17c60ce048; GitHub had the identical SHA. No interrupted uncommitted changes were present.
+
+Implemented safe catalog CSV preview using one tested parser/validator wired into the existing administration screen. Malformed quoting, unknown headers, invalid availability, non-decimal/over-precision prices, overlong names/descriptions, duplicate IDs and missing collections are rejected before save. Existing galleries, omitted fields and revision tokens are preserved. Import submission has a synchronous duplicate-click guard; partial failures report the original source line. Existing server authorization, per-row concurrency and audit behavior are reused. Imports are sequential and can partially complete; they are not atomic bulk transactions.
+
+Executed in this milestone: TypeScript --noEmit --incremental false passed; production build passed; product-csv.unit 30 assertions; builder.unit 12; redesign.regression 31; repairs.regression 13; reporting.unit 13. All passed. Browser and live HTTP integration suites were not rerun in this milestone. No real orders or shipments were created.
+
+No schema changes or migrations, no production access or deployment. Source and test files only; generated builds, local databases and credentials remain ignored.
+
+Module review: product CRUD, family editing, archive/restore and CSV transfer exist; catalog management is not yet a complete platform module. Customers are currently a read-only order-derived summary. Orders have existing edit/workflow/shipping safeguards. Reports are real period-filtered aggregates. Coupons and staff RBAC are absent. Builder supports documents, previews, drafts/publishing/history but needs broader workflow QA. Integrations still require real credentials and verification; no new connection was configured.
+
+Next priority: finish catalog/collection integrity (reject removal of collections referenced by products, including archived products; concurrency tests), improve dedicated collection management and catalog search. Then complete customer operations, coupon transactions and staff permissions in separate verified milestones. Preserve order price snapshots and existing IDs. Bosta credentials and pickup address, analytics/notification provider setup and approved business content remain external inputs.
