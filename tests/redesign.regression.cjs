@@ -33,6 +33,11 @@ const request=(body,url='/api/orders')=>new Request('https://test.local'+url,{me
   ok(Object.keys(customerErrors({...customer,addressType:'apartment'})).includes('floor'),'apartment needs floor');
   ok(!Object.keys(customerErrors({...customer,addressType:'work'})).length,'work address supported');
   const first=attempt();let r=await orders.POST(request(first));ok(r.status===201,'guest order accepted');const saved=await r.json();
+  r=await orders.POST(request({...attempt(),customer:{...customer,whatsapp:undefined}}));
+  ok(r.status===400&&(await r.json()).fields.whatsapp==='required','checkout requires an explicit WhatsApp choice');
+  r=await orders.POST(request({...attempt(),customer:{...customer,whatsapp:'false'}}));
+  ok(r.status===400&&(await r.json()).fields.whatsapp==='required','a string is not a valid WhatsApp choice');
+  ok(JSON.parse(sqlite.prepare('SELECT data FROM orders WHERE id=?').get(saved.id).data).customer.whatsapp===false,'explicit No is recorded without coercion');
   r=await orders.POST(request(null));ok(r.status===400,'null payload rejected as client error');
   r=await orders.POST(request({...attempt(),items:[null]}));ok(r.status===400,'invalid cart row rejected as client error');
   r=await orders.POST(request(first));ok((await r.json()).id===saved.id,'same attempt returns same saved order');

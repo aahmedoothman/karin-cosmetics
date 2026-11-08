@@ -81,6 +81,15 @@
 .campaign-store .k-help {border-radius:24px;border:1px solid var(--k-line);padding:35px;margin-bottom:50px}
 .campaign-store .k-footer {background:linear-gradient(180deg,var(--k-bg),var(--k-soft))}
 .campaign-store .k-checkout-form,.campaign-store .k-checkout-summary {box-shadow:0 0 25px #d21d7810}
+.k-contact-choice {min-width:0;margin:0;padding:0;border:0}
+.k-contact-choice legend {margin-bottom:8px;font-size:14px}
+.k-contact-choice>div {display:flex;flex-wrap:wrap;gap:8px}
+.k-form-grid .k-contact-choice label {
+  display:flex;align-items:center;gap:8px;min-height:44px;
+  padding:6px 12px;border:1px solid var(--k-line);border-radius:12px;cursor:pointer;
+}
+.k-form-grid .k-contact-choice input {width:18px;height:18px;margin:0;accent-color:var(--k-button)}
+.k-contact-choice label:has(input:checked) {border-color:var(--k-gold)}
 .campaign-store .k-bag-line {border:1px solid var(--k-line);border-radius:18px;padding:16px}
 .campaign-store .k-bag-line>a {height:125px;aspect-ratio:auto}
 .campaign-store .k-bag-line img {padding:8px}

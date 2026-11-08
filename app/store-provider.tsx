@@ -17,7 +17,7 @@ type StoreState = {
   error: string; reviewBag: (reason: string) => void; finished: (id: string, lang: 'ar'|'en') => void;
 };
 const Context = createContext<StoreState | null>(null);
-const blankDraft = (): CheckoutDraft => ({customer: {addressType: 'apartment', whatsapp: false}, step: 0});
+const blankDraft = (): CheckoutDraft => ({customer: {addressType: 'apartment'}, step: 0});
 
 export function StoreProvider({children}: {children: ReactNode}) {
   const router = useRouter();

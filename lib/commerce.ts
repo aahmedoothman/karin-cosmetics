@@ -2,6 +2,12 @@ import {governorates} from './catalog';
 export const normalize=(s:string)=>s.normalize('NFKD').replace(/[\u064B-\u065F\u0670]/g,'').replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').toLowerCase().trim().replace(/\s+/g,' ');
 export const phoneNumber=(v:string)=>v.replace(/[٠-٩]/g,x=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(x))).replace(/[\s()-]/g,'').replace(/^\+?20/,'0');
 export function customerErrors(c:any){const e:Record<string,string>={};const value=(k:string)=>typeof c[k]==='string'?c[k].trim():'';if(value('name').length<3)e.name='name';if(!/^01[0125]\d{8}$/.test(phoneNumber(value('phone'))))e.phone='phone';if(!governorates.includes(c.governorate))e.governorate='required';if(value('city').length<2)e.city='required';if(value('street').length<6)e.street='address';if(!value('building'))e.building='required';if(!['apartment','villa','work'].includes(c.addressType))e.addressType='required';if(c.addressType==='apartment'){if(!value('floor'))e.floor='required';if(!value('apartment'))e.apartment='required';}if(value('email')&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value('email')))e.email='email';return e;}
+export function checkoutCustomerErrors(customer:any){
+  const value=customer&&typeof customer==='object'?customer:{};
+  const errors=customerErrors(value);
+  if(typeof value.whatsapp!=='boolean')errors.whatsapp='required';
+  return errors;
+}
 export function cleanCustomer(c:any){const result:any={addressType:c.addressType,whatsapp:c.whatsapp===true};for(const k of ['name','phone','email','governorate','city','street','building','floor','apartment','landmark','notes'])result[k]=String(c[k]||'').trim().slice(0,k==='notes'?1000:k==='street'||k==='landmark'?200:100);result.phone=phoneNumber(result.phone);if(c.addressType!=='apartment'){result.floor='';result.apartment='';}return result;}
 export const statusLabels:Record<string,string>={pending:'بانتظار التأكيد',confirmed:'مؤكد هاتفيًا',processing:'قيد التجهيز',shipped:'تم الشحن',delivered:'تم التسليم',cancelled:'ملغي',returned:'مرتجع'};
 export const transitions:Record<string,string[]>={pending:['pending','confirmed','cancelled'],confirmed:['confirmed','processing','cancelled'],processing:['processing','shipped','cancelled'],shipped:['shipped','delivered','returned'],delivered:['delivered','returned'],cancelled:['cancelled','pending'],returned:['returned']};
