@@ -28,8 +28,18 @@ yarn-error.log*
 
 # Local environment and keys
 .env*
+!.env.example
 .dev.vars*
 *.pem
+*.key
+*.sqlite*
+*.db
+*.db-wal
+*.db-shm
+/backups/
+/exports/
+karin-backup.*
+karin-orders.csv
 
 # Checkout-local tool state
 /.wrangler/

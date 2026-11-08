@@ -9,7 +9,7 @@ export default function CampaignHero({products, locale}: {products: any[]; local
   const prices = products.map(product => product.price);
   const samePrice = prices.length > 0 && prices.every(price => price === prices[0]);
   const ar = locale === 'ar';
-  return <section className="campaign-hero">
+  return <div className="campaign-hero-backdrop"><section className="campaign-hero">
     <div className="campaign-copy">
       <h1 dir="ltr">Crazy Colours <span>by <em>Karin</em></span></h1>
       <p>{ar ? 'مجموعة ألوان الشعر' : 'The hair colour collection'}</p>
@@ -21,9 +21,14 @@ export default function CampaignHero({products, locale}: {products: any[]; local
       <div className="campaign-bottles">{lineup.map((product, index) => {
         const distance = Math.abs(index - (lineup.length - 1) / 2);
         const scale = 1.3 - distance * 0.068;
-        return <Link key={product.id} href={'/' + locale + '/products/' + product.id} style={{'--bottle-scale': scale} as React.CSSProperties} aria-label={ar ? product.ar : product.en}><img src={productImage(product.image,480)} alt={ar ? product.ar : product.en} width={164} height={480} loading="eager"/></Link>;
+        return <Link key={product.id} href={'/' + locale + '/products/' + product.id} style={{'--bottle-scale': scale} as React.CSSProperties} aria-label={ar ? product.ar : product.en}>
+          <picture>
+            <source media="(max-width: 760px)" srcSet={productImage(product.image,240)}/>
+            <img src={productImage(product.image,480)} alt="" width={164} height={480} loading="eager"/>
+          </picture>
+        </Link>;
       })}</div>
       <div className="campaign-podium" aria-hidden="true"/>
     </div>
-  </section>;
+  </section></div>;
 }

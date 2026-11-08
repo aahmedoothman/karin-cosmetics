@@ -1,4 +1,58 @@
-# vinext-starter
+# Karin Cosmetics
+
+Karin's existing bilingual store and administration console. The app uses React 19, TypeScript and Next.js App Router conventions, compiled by Vinext/Vite to a Cloudflare Worker. This is the existing project, with its local storefront and how-to-use changes included.
+
+## Start a clean local preview
+
+Install Node.js 22.13 or later, npm and Git. From the repository root:
+
+```sh
+npm run install:ci
+npm run build
+```
+
+For a **new, empty local** D1 only, apply the checked-in schema files in order. These commands use the generated Wrangler config and explicit `--local`:
+
+```sh
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0000_panoramic_the_hand.sql
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0001_milky_alex_wilder.sql
+node --import ./scripts/sites-env.mjs ./node_modules/wrangler/bin/wrangler.js d1 execute DB --local --config dist/server/wrangler.json --persist-to .wrangler/state --file drizzle/0002_abandoned_morg.sql
+npm run dev
+```
+
+Open the URL printed by Vinext, normally `http://127.0.0.1:5173/ar`. The portable development server supports local mock sign-in at `/signin-with-chatgpt?return_to=/admin`. `npm start` previews the built Worker locally and does not simulate sign-in. See [.env.example](.env.example) for optional Bosta settings. Keep Bosta disabled during ordinary local testing.
+
+```sh
+node node_modules/typescript/bin/tsc --noEmit
+node tests/redesign.regression.cjs
+node tests/repairs.regression.cjs
+node tests/builder.unit.cjs
+node tests/shipping.mock.cjs
+```
+
+## Source, runtime data and media
+
+| Location | Contents |
+| --- | --- |
+| `app/`, `lib/`, `worker/` | Storefront, admin, routes and Worker entrypoint |
+| `db/schema.ts`, `drizzle/` | D1 schema and versioned SQL migrations |
+| `public/assets/` | Tracked campaign, product images, logo and fonts |
+| Cloudflare D1 binding `DB` | Product and setting overrides, orders, customer details, historical line prices, status and operational history |
+| Cloudflare R2 binding `BUCKET` | Uploaded media, served by `/api/media/:key` |
+| `.wrangler/state/` | Local emulated D1/R2 state, excluded from source transfers |
+
+Product and shade IDs are seeded in `lib/catalog.ts` and persisted in `products.id` when overridden. Customer-facing links are `/ar/products/:id` and `/en/products/:id`. The submitted order snapshots each item ID, names, quantity and unit price in `orders.data`, along with contact/address and shipping information. The Customers view is derived from those orders. Receipt lookup uses a stored hash of the secret link token.
+
+## Release and recovery
+
+- GitHub is a source mirror. The current production runtime is OpenAI Sites, identified by `.openai/hosting.json`, with D1 and R2 attached there. Uploading to GitHub does not deploy the site. This repository does not include a GitHub Actions deployment workflow.
+- To release to the current site later, use the Sites tooling to open the same project, build and package the exact source revision, save a Site version and explicitly deploy it. Preserve the existing bindings and access policy. Build output is under `dist/`. The admin depends on the trusted identity headers injected by Sites. A move to another host requires a trusted authentication integration and explicit D1/R2 configuration before it can safely serve admin traffic.
+- **Production baseline at handoff:** Sites version 11, commit `11b7940a8aafc7e5211083d31c375da6b5fd8679`. The source export also includes the unpublished bilingual usage guide and mobile layout fixes. Use the saved Sites version for a code rollback. A code rollback does not roll back or reset D1.
+- An authenticated admin can download a JSON snapshot at `/api/admin/backup`, or an archive with uploaded R2 media and a checksum manifest at `/api/admin/backup?format=archive`. Backups contain private order data. Store them encrypted and access-restricted outside Git and outside this ZIP. Runtime secrets are managed separately.
+- Verify a private backup in a **new isolated directory**, from the project root, using `node scripts/restore-archive.mjs PATH_TO_BACKUP.tar NEW_ISOLATED_DIRECTORY`. This validates checksums and SQLite integrity and extracts the uploaded media. It does not reconnect a live D1 database or upload to R2. Recovering on a new host requires an explicitly authorized, verified import of both stores and restoration of the relevant runtime configuration.
+- See [the historical operations notes](docs/OPERATIONS.md) for order, shipping and backup details. Their release numbers refer to the earlier release documented there.
+
+## Framework and hosting reference
 
 A clean full-stack starter running on [vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and Drizzle support.
 
