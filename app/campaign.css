@@ -1,0 +1,140 @@
+/* Campaign skin shared by catalogue, purchase and receipt surfaces. */
+.campaign-store {
+  --k-bg:#170617;--k-surface:#230c24;--k-soft:#2a1029;--k-ink:#fff8fb;
+  --k-muted:#d8c7d4;--k-line:#71355d;--k-gold:#ff51b2;
+  --k-button:#ff269a;--k-on-button:#21051b;
+  background:var(--k-bg) url('/assets/campaign/hair.webp') center top / 100% auto no-repeat;
+  color-scheme:dark;
+}
+:root[data-theme=dark] .campaign-store {
+  --k-bg:#170617;--k-surface:#230c24;--k-soft:#2a1029;--k-ink:#fff8fb;
+  --k-muted:#d8c7d4;--k-line:#71355d;--k-gold:#ff51b2;--k-button:#ff269a;--k-on-button:#21051b;
+}
+:root[data-theme=light] .campaign-store {
+  --k-bg:#fff7fc;--k-surface:#fff;--k-soft:#f6e6f0;--k-ink:#2c1029;
+  --k-muted:#694a61;--k-line:#d9b8ce;--k-gold:#ad1264;--k-button:#db0877;--k-on-button:#fff;
+  color-scheme:light;
+}
+.campaign-store .k-header {position:relative;height:88px;background:transparent;border:0;color:#fff8fb}
+.campaign-store .k-header-inner {direction:ltr;max-width:1380px}
+.campaign-store .k-desktop-nav {direction:rtl}
+.campaign-store[dir=ltr] .k-desktop-nav {direction:ltr}
+.campaign-store .k-header :is(.k-icon,.k-language) {color:#fff8fb}
+.campaign-store .k-logo {position:relative;overflow:hidden;background:transparent;width:150px;height:78px;border-radius:0;mix-blend-mode:screen}
+.campaign-store .k-logo img {position:absolute;width:178px;max-width:none;height:178px;top:-44px;left:-14px;object-fit:contain;mask-image:radial-gradient(ellipse 49% 30% at 50% 47%,#000 65%,transparent 100%)}
+.campaign-store .k-button {border-radius:999px;font-size:17px;font-weight:650;gap:12px;padding-inline:28px}
+.campaign-store .k-eyebrow {letter-spacing:.08em}
+.campaign-hero {min-height:590px;max-width:1440px;margin:auto;padding:38px 4% 65px;display:grid;grid-template-columns:36% 64%;align-items:center;direction:ltr;color:#fff8fb;gap:0}
+.campaign-copy {text-align:center;z-index:2}
+.campaign-copy h1 {font:600 clamp(34px,4.5vw,66px)/1.1 'Sora',sans-serif;letter-spacing:-.04em}
+.campaign-copy h1>span {display:block;font:italic 32px/1.3 Georgia,serif;margin-top:4px}
+.campaign-copy h1 em {font:italic 700 clamp(48px,5vw,76px)/1.2 Georgia,serif;color:#ff32a4;display:inline-block;border-bottom:3px solid #ff32a4;transform:rotate(-5deg)}
+.campaign-copy>p {font-size:26px;margin-top:28px}
+.campaign-copy h2 {display:inline-block;font-size:28px;background:linear-gradient(110deg,#e70c83,#a00865);border-radius:10px;padding:2px 18px;margin-top:8px}
+.campaign-copy .campaign-price {margin:26px 0;font-size:28px;direction:rtl}
+.campaign-copy .campaign-price small {font-size:17px}
+.campaign-copy .k-button {min-width:210px;color:#200316;background:#ff2a9c}
+.campaign-stage {align-self:end;position:relative;min-width:0;padding:0 18px 48px}
+.campaign-bottles {display:flex;align-items:end;justify-content:center;height:400px;position:relative;z-index:2;direction:ltr}
+.campaign-bottles a {height:100%;width:13%;margin-inline:-1.2%;display:flex;align-items:end;position:relative;filter:drop-shadow(3px 5px 4px #16000999);transition:transform .3s}
+.campaign-bottles a:nth-child(5) {z-index:5}
+.campaign-bottles a:hover {transform:translateY(-9px)}
+.campaign-bottles img {width:100%;height:100%;object-fit:contain;object-position:center bottom;transform:scale(var(--bottle-scale,1));transform-origin:center bottom}
+.campaign-podium {height:72px;position:absolute;left:0;right:0;bottom:0;border-radius:50% / 22%;background:linear-gradient(90deg,#260320,#a51573 8%,#320525 20%,#1d031d 45%,#8e147f 75%,#230329);border:2px solid #ff58c7;box-shadow:0 5px 20px #df168979,0 -4px 20px #ff43bc66}
+.campaign-podium:before {content:'';position:absolute;inset:-16px -2px auto;height:35px;border-radius:50%;background:linear-gradient(110deg,#591240,#c5489f,#461442);border:2px solid #ffb0eb;box-shadow:0 0 16px #ff4fb6}
+.campaign-store .k-catalog {border:0;padding-top:35px}
+.campaign-store .k-section-heading {align-items:center}
+.campaign-store .k-product-grid {grid-template-columns:repeat(5,minmax(0,1fr));gap:22px}
+.campaign-store .k-product-card {border:1px solid var(--k-line);border-radius:23px;overflow:hidden;background:linear-gradient(150deg,color-mix(in srgb,var(--shade,#7b1462) 27%,var(--k-bg)),var(--k-bg));padding-bottom:16px;text-align:center}
+.campaign-store .k-product-image {padding:22px 10px 4px;background:radial-gradient(ellipse at center,color-mix(in srgb,var(--shade,#a51673) 60%,transparent),transparent 65%);border-radius:0}
+.campaign-store .k-product-image img {height:245px;aspect-ratio:auto;width:100%;filter:drop-shadow(0 12px 9px #0005)}
+.campaign-store .k-card-info {display:grid;justify-content:center;gap:3px;padding:10px}
+.campaign-store .k-card-info h3 {font-size:22px;font-weight:650}
+.campaign-store .k-product-family {display:none}
+.campaign-store .k-card-info strong {color:var(--k-gold);font-size:19px}
+.campaign-store .k-card-add {display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;border:1px solid var(--k-gold);border-radius:999px;margin:4px auto 0;padding:6px 15px;font-size:13px}
+.campaign-store .k-card-add:hover {background:var(--k-button);color:var(--k-on-button)}
+.campaign-store .k-detail {direction:ltr;gap:5%;grid-template-columns:1fr 1fr}
+.campaign-store[dir=rtl] .k-detail-copy {direction:rtl}
+.campaign-store .k-gallery {display:flex;flex-direction:row-reverse;align-items:start;gap:15px}
+.campaign-store .k-gallery-main {flex:1;background:radial-gradient(ellipse at 50% 65%,color-mix(in srgb,var(--shade,#ae165c) 55%,transparent),transparent 65%);border:0;overflow:visible;padding:20px}
+.campaign-store .k-gallery-main img {height:540px;aspect-ratio:auto;filter:drop-shadow(0 22px 15px #0006)}
+.campaign-store .k-thumbnails {flex-direction:column;max-height:550px;overflow:auto;margin-top:20px}
+.campaign-store .k-detail h1 {font-size:23px;color:var(--k-ink)}
+.campaign-store .k-detail h1>span {font-size:30px}
+.campaign-store .k-detail-price strong {font-size:38px;color:var(--k-gold);font-weight:650}
+.campaign-store .k-shades>div {display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.campaign-store .k-shades label {display:flex;flex-direction:column;gap:5px;padding:6px 3px;font-size:11px;border-color:transparent;background:transparent;text-align:center}
+.campaign-store .k-shades i {width:100%;height:52px;border-radius:12px;background-image:linear-gradient(135deg,#0009 10%,#ffffff55 36%,#0003 48%,#ffffff33 67%,#0008)!important;border:1px solid #ffffff66}
+.campaign-store .k-shades label.is-selected {border-color:var(--k-gold);box-shadow:0 0 0 1px var(--k-gold)}
+.campaign-store .k-shades label>svg {position:absolute;top:9px;right:7px;background:#f32397;border-radius:50%;color:white}
+.campaign-store .k-product-accordions {border:1px solid var(--k-line);border-radius:18px;padding:0 18px}
+.campaign-store .k-help {border-radius:24px;border:1px solid var(--k-line);padding:35px;margin-bottom:50px}
+.campaign-store .k-footer {background:linear-gradient(180deg,var(--k-bg),var(--k-soft))}
+.campaign-store .k-checkout-form,.campaign-store .k-checkout-summary {box-shadow:0 0 25px #d21d7810}
+.campaign-store .k-bag-line {border:1px solid var(--k-line);border-radius:18px;padding:16px}
+.campaign-store .k-bag-line>a {height:125px;aspect-ratio:auto}
+.campaign-store .k-bag-line img {padding:8px}
+@media (min-width:761px) and (max-width:1100px) {
+  .campaign-store .k-product-grid {grid-template-columns:repeat(3,minmax(0,1fr))}
+  .campaign-bottles {height:310px}.campaign-hero {min-height:500px}
+  .campaign-copy h2 {font-size:23px}.campaign-copy>p {font-size:22px}
+}
+@media(max-width:760px) {
+  .campaign-store {background-size:auto 750px;background-position:60% top}
+  .campaign-store .k-header {height:76px}
+  .campaign-store .k-logo {width:104px;height:68px}
+  .campaign-store .k-logo img {width:138px;height:138px;top:-32px;left:-17px}
+  .campaign-hero {grid-template-columns:1fr;gap:24px;padding:12px 5% 35px;min-height:0}
+  .campaign-copy {display:contents}
+  .campaign-copy h1 {text-align:center;font-size:39px;grid-row:1}
+  .campaign-copy h1>span {font-size:24px}
+  .campaign-copy h1 em {font-size:52px}
+  .campaign-copy>p:not(.campaign-price) {display:none}
+  .campaign-copy h2 {grid-row:2;text-align:center;font-size:23px;justify-self:center;margin:0}
+  .campaign-stage {grid-row:3;padding:0 6px 28px}
+  .campaign-bottles {height:240px}
+  .campaign-podium {height:42px}
+  .campaign-podium:before {height:24px;top:-10px}
+  .campaign-copy .campaign-price {grid-row:4;text-align:center;margin:0;font-size:26px}
+  .campaign-copy .k-button {grid-row:5;justify-self:center;width:80%;margin-top:-10px}
+  .campaign-store .k-catalog {padding-top:25px}
+  .campaign-store .k-product-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .campaign-store .k-product-image img {height:205px}
+  .campaign-store .k-card-info h3 {font-size:19px}
+  .campaign-store .k-card-info strong {font-size:17px}
+  .campaign-store .k-card-add {font-size:12px;padding:6px 10px}
+  .campaign-store .k-product-card {border-radius:18px}
+  .campaign-store .k-detail {grid-template-columns:1fr;gap:22px}
+  .campaign-store .k-gallery-main img {height:340px}
+  .campaign-store .k-gallery-main {padding:5px}
+  .campaign-store .k-thumbnails {max-height:340px}
+  .campaign-store .k-detail-price strong {font-size:32px}
+  .campaign-store .k-shades>div {grid-template-columns:repeat(4,minmax(0,1fr))}
+  .campaign-store .k-shades i {height:49px}
+  .campaign-store .k-help {padding:24px}
+}
+@media(max-width:350px){.campaign-copy h1{font-size:32px}.campaign-bottles{height:200px}.campaign-store .k-product-image img{height:180px}.campaign-store .k-card-add{font-size:11px}}
+
+.receipt-page.campaign-receipt {
+  --bg:#170617;--surface:#230c24;--ink:#fff8fb;--muted:#d8c7d4;
+  --line:#71355d;--accent:#ff67bd;--soft:#34122f;
+  max-width:none;min-height:100dvh;margin:0;color:var(--ink);
+  background:linear-gradient(180deg,#17061733,#170617 32rem),var(--bg) url('/assets/campaign/hair.webp') center top / max(100%,780px) auto no-repeat;
+  padding:0 max(5vw, calc((100vw - 820px) / 2)) 64px;
+}
+:root[data-theme=light] .receipt-page.campaign-receipt {
+  --bg:#fff7fc;--surface:#fff;--ink:#2c1029;--muted:#694a61;
+  --line:#d9b8ce;--accent:#ad1264;--soft:#f6e6f0;
+  background:var(--bg);
+}
+.campaign-receipt .admin-head {gap:8px;justify-content:flex-start;padding-block:10px}
+.campaign-receipt .admin-head>a {margin-inline-end:auto;width:110px;height:62px;overflow:hidden;position:relative;mix-blend-mode:screen}
+.campaign-receipt .admin-head img {position:absolute;top:-31px;width:110px;height:110px;object-fit:contain}
+:root[data-theme=light] .campaign-receipt .admin-head>a {background:#170617;border-radius:12px;mix-blend-mode:normal}
+.campaign-receipt .receipt-heading {text-align:center;margin-block:26px 30px}
+.campaign-receipt .receipt-heading span {display:grid;place-items:center;width:64px;height:64px;margin:0 auto 14px;border:1px solid var(--accent);border-radius:50%;color:var(--accent);font-size:32px}
+.campaign-receipt .receipt-heading h1 {font-size:clamp(26px,5vw,44px);font-weight:650}
+.campaign-receipt .admin-card {background:var(--surface);border-color:var(--line);border-radius:24px}
+.campaign-receipt .summary-line {font-size:16px}
+.campaign-receipt .secondary {min-height:44px;background:var(--surface);color:var(--ink);border-color:var(--line)}

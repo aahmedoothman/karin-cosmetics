@@ -1,0 +1,67 @@
+// No browser/customer database, network requests or actual shipments are used.
+const fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
+const assert=require('node:assert/strict'),{DatabaseSync}=require('node:sqlite'),ts=require('typescript');
+const sqlite=new DatabaseSync(':memory:');
+for(const f of fs.readdirSync('drizzle').filter(f=>f.endsWith('.sql')).sort())sqlite.exec(fs.readFileSync('drizzle/'+f,'utf8'));
+let batchTail=Promise.resolve(),passed=0;
+function prepare(sql){const stmt=sqlite.prepare(sql);let args=[];return {bind(...a){args=a;return this;},async first(){return stmt.get(...args)||null;},async all(){return {results:stmt.all(...args)};},async run(){return {meta:{changes:Number(stmt.run(...args).changes)}};}};}
+const DB={prepare,batch(statements){const task=batchTail.then(async()=>{sqlite.exec('BEGIN');try{const out=[];for(const s of statements)out.push(await s.run());sqlite.exec('COMMIT');return out;}catch(e){sqlite.exec('ROLLBACK');throw e;}});batchTail=task.catch(()=>{});return task;}};
+const cache={};
+function load(file){file=path.resolve(file);if(cache[file])return cache[file].exports;const m={exports:{}};cache[file]=m;
+  const source=fs.readFileSync(file,'utf8').replaceAll('import.meta.env.DEV','false');
+  const code=ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX}}).outputText;
+  const req=id=>id==='cloudflare:workers'?{env:{DB}}:id.includes('chatgpt-auth')?{getChatGPTUser:async()=>null}:id.startsWith('.')?load(path.resolve(path.dirname(file),id)+(fs.existsSync(path.resolve(path.dirname(file),id)+'.ts')?'.ts':'.tsx')):require(id);
+  vm.runInNewContext('(function(require,module,exports){'+code+'})',{Request,Response,Headers,crypto,TextEncoder,TextDecoder,console,URL,URLSearchParams,Uint8Array,AbortSignal,Date},{filename:file})(req,m,m.exports);return m.exports;
+}
+const ok=(value,label)=>{assert.ok(value,label);passed++;};
+const {filterState,filterQuery,productImage,boundProduct}=load('lib/storefront.ts');
+const {normalize,customerErrors}=load('lib/commerce.ts');
+const orders=load('app/api/orders/route.ts'),recover=load('app/api/orders/recover/route.ts');
+const customer={name:'QA isolated only',phone:'01000000000',governorate:'القاهرة',city:'QA city',street:'QA test street',building:'1',addressType:'villa',whatsapp:false};
+const attempt=()=>({requestKey:crypto.randomUUID(),receiptToken:'a'.repeat(64),customer,items:[{id:'blue',qty:1,price:100}],consent:true,locale:'ar',website:''});
+const request=(body,url='/api/orders')=>new Request('https://test.local'+url,{method:'POST',headers:{Origin:'https://test.local','Content-Type':'application/json'},body:JSON.stringify(body)});
+(async()=>{
+  ok(filterQuery(filterState('?q=%D9%85%D9%88%D9%81&family=karin-colour&sort=price-desc&max=120'))==='?q=%D9%85%D9%88%D9%81&family=karin-colour&max=120&sort=price-desc','filters round-trip including Arabic');
+  ok(filterState('?sort=bad').sort==='featured','invalid sort fallback');
+  ok(normalize('  أَزْرَق   ')==='ازرق','Arabic normalisation');
+  ok(productImage('/assets/colors/blue.jpg',320)==='/assets/optimized/blue-320.webp','image uses original file, not product identifier');
+  ok(productImage('/api/media/test.webp')==='/api/media/test.webp','uploaded image preserved');
+  ok(boundProduct([{id:'blue'}],{id:'blue'},'archived')===undefined,'missing binding never substitutes selected product');
+  ok(!Object.keys(customerErrors(customer)).length,'house does not require apartment or floor');
+  ok(Object.keys(customerErrors({...customer,addressType:'apartment'})).includes('floor'),'apartment needs floor');
+  ok(!Object.keys(customerErrors({...customer,addressType:'work'})).length,'work address supported');
+  const first=attempt();let r=await orders.POST(request(first));ok(r.status===201,'guest order accepted');const saved=await r.json();
+  r=await orders.POST(request(first));ok((await r.json()).id===saved.id,'same attempt returns same saved order');
+  ok(sqlite.prepare('SELECT count(*) n FROM orders').get().n===1,'no duplicate after retry');
+  // The response is deliberately discarded; recovery simulates reconnecting after save.
+  const lost=attempt();await orders.POST(request(lost));
+  r=await recover.POST(request({requestKey:lost.requestKey,receiptToken:lost.receiptToken},'/api/orders/recover'));
+  ok(r.ok&&typeof(await r.json()).id==='string','saved attempt recovered after missing response');
+  r=await recover.POST(request({requestKey:lost.requestKey,receiptToken:'b'.repeat(64)},'/api/orders/recover'));
+  ok(!r.ok,'wrong receipt secret denied');
+  const concurrent=attempt(),before=sqlite.prepare('SELECT count(*) n FROM orders').get().n;
+  const parallel=await Promise.all([orders.POST(request(concurrent)),orders.POST(request(concurrent))]);
+  const ids=await Promise.all(parallel.map(r=>r.json()));ok(ids[0].id===ids[1].id,'concurrent retry converges to same order');
+  ok(sqlite.prepare('SELECT count(*) n FROM orders').get().n===before+1,'concurrent retry saves one order');
+  const blue={id:'blue',ar:'أزرق',en:'Blue',image:'/assets/colors/blue.jpg',price:120,active:true,parentId:'karin-colour',contentState:'approved'};
+  sqlite.prepare('INSERT INTO products(id,data,revision,updated) VALUES(?,?,1,?)').run('blue',JSON.stringify(blue),new Date().toISOString());
+  r=await orders.POST(request(attempt()));ok(r.status===409&&(await r.json()).error==='PRICE_CHANGED','server rejects changed price');
+  sqlite.prepare('UPDATE products SET data=? WHERE id=?').run(JSON.stringify({...blue,price:100,active:false}),'blue');
+  r=await orders.POST(request(attempt()));ok(r.status===409&&(await r.json()).error==='PRODUCT_CHANGED','server rejects archived shade');
+  sqlite.prepare('UPDATE products SET data=? WHERE id=?').run(JSON.stringify({...blue,price:100}),'blue');
+  sqlite.prepare('INSERT INTO settings(id,data,revision) VALUES(?,?,1)').run('shop',JSON.stringify({acceptOrders:false}));
+  r=await orders.POST(request(attempt()));ok(r.status===409&&(await r.json()).error==='PAUSED','server rejects paused orders');
+  const React=require('react'),{renderToStaticMarkup}=require('react-dom/server'),Renderer=load('app/design-renderer.tsx').default;
+  const doc={schema:1,theme:{background:'#faf8f4',ink:'#222222',accent:'#222222',font:'Changa'},nodes:[{id:'price',type:'product_price',productId:'archived'},{id:'buy',type:'buy_button',productId:'archived'}]};
+  let html=renderToStaticMarkup(React.createElement(Renderer,{doc,products:[blue],selected:blue,locale:'en'}));
+  ok(html.includes('Unavailable')&&html.includes('disabled'),'archived binding disables purchase rather than replacing product');
+  html=renderToStaticMarkup(React.createElement(Renderer,{doc:{...doc,nodes:[{id:'buy',type:'buy_button'}]},products:[blue],selected:blue,locale:'en',acceptOrders:false}));
+  ok(html.includes('disabled'),'custom purchase button respects pause');
+  const Checkout=load('app/checkout.tsx').default;
+  const props={lang:'en',attempt:{...concurrent,key:concurrent.requestKey,token:concurrent.receiptToken,uncertain:true},draft:{customer:{},step:2},onDraft(){},freeze(){},updateAttempt(){},onSaved(){},onClose(){},onDefiniteFailure(){}};
+  html=renderToStaticMarkup(React.createElement(Checkout,{...props,frozenCustomer:null}));
+  ok(!html.includes('<form')&&!html.includes('name=')&&!html.includes('Resend the same attempt'),'after reload unresolved attempt permits recovery only, not changed payload');
+  html=renderToStaticMarkup(React.createElement(Checkout,{...props,frozenCustomer:customer}));
+  ok(html.includes('Resend the same attempt')&&!html.includes('name='),'retry uses frozen details and offers no editable customer fields');
+  console.log(JSON.stringify({passed,isolatedDatabase:true,realOrders:0,realShipments:0}));sqlite.close();
+})().catch(e=>{console.error(e);process.exitCode=1;});

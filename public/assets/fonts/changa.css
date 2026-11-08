@@ -1,0 +1,21 @@
+@font-face {
+  font-family: 'Changa';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(/assets/fonts/changa-2-c79JNi2YuVOUcOarRPgnNGooxCZ62xQjA.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Changa';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(/assets/fonts/changa-2-c79JNi2YuVOUcOarRPgnNGooxCZ5-xQjA.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Changa';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url(/assets/fonts/changa-2-c79JNi2YuVOUcOarRPgnNGooxCZ3O2QjA.ttf) format('truetype');
+}
