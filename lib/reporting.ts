@@ -22,13 +22,25 @@ function cairoBoundary(day: string, utcDay: number) {
   return new Date(lo * minuteMs).toISOString();
 }
 
+export function orderDateBoundaries(from: string, to: string) {
+  const first = from ? calendarDay(from) : null;
+  const last = to ? calendarDay(to) : null;
+  if ((first !== null && !Number.isFinite(first)) || (last !== null && !Number.isFinite(last))
+      || (first !== null && last !== null && first > last) || to === '9999-12-31') return null;
+  const next = last === null ? null : last + dayMs;
+  return {
+    start: first === null ? null : cairoBoundary(from, first),
+    end: next === null ? null : cairoBoundary(new Date(next).toISOString().slice(0, 10), next),
+  };
+}
+
 export function reportPeriod(params: URLSearchParams, now = new Date()) {
   const today = cairoDay.format(now);
   const from = params.get('from') ?? new Date(calendarDay(today) - 29 * dayMs).toISOString().slice(0, 10);
   const to = params.get('to') ?? today;
   const first = calendarDay(from);
   const last = calendarDay(to);
-  if (!Number.isFinite(first) || !Number.isFinite(last) || last < first || last - first >= 366 * dayMs) return null;
+  if (!Number.isFinite(first) || !Number.isFinite(last) || last < first || last - first >= 366 * dayMs || to === '9999-12-31') return null;
 
   const boundaries: {day:string; start:string}[] = [];
   for (let ms = first; ms <= last + dayMs; ms += dayMs) {

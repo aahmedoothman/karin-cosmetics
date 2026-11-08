@@ -48,6 +48,8 @@ Product and shade IDs are seeded in `lib/catalog.ts` and persisted in `products.
 
 Admin Overview and Reports default to the last 30 calendar days in Cairo and support a custom period of up to 366 days. Recorded product value and confirmed payable exclude cancelled and returned orders. Recorded collections reflect saved amounts, including amounts on returned orders. Outstanding balance uses only confirmed, non-cancelled, non-returned orders. The Reports CSV contains aggregates for the displayed period.
 
+The Orders list and its detailed CSV export accept optional inclusive Cairo dates, alongside reference search and status. Detailed order exports contain personal information and must remain in approved private storage.
+
 - GitHub is a source mirror. The current production runtime is OpenAI Sites, identified by `.openai/hosting.json`, with D1 and R2 attached there. Uploading to GitHub does not deploy the site. This repository does not include a GitHub Actions deployment workflow.
 - To release to the current site later, use the Sites tooling to open the same project, build and package the exact source revision, save a Site version and explicitly deploy it. Preserve the existing bindings and access policy. Build output is under `dist/`. The admin depends on the trusted identity headers injected by Sites. A move to another host requires a trusted authentication integration and explicit D1/R2 configuration before it can safely serve admin traffic.
 - **Production baseline at handoff:** Sites version 11, commit `11b7940a8aafc7e5211083d31c375da6b5fd8679`. The source export also includes the unpublished bilingual usage guide and mobile layout fixes. Use the saved Sites version for a code rollback. A code rollback does not roll back or reset D1.
