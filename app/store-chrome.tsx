@@ -8,8 +8,12 @@ import {useStore} from './store-provider';
 import {api} from './ui';
 import {lastReceiptLink} from '../lib/browser';
 
-export function ProductPhoto({src,alt,hero=false}:{src:string;alt:string;hero?:boolean}){
+export function ProductPhoto({src,alt,hero=false,card=false}:{src:string;alt:string;hero?:boolean;card?:boolean}){
   const original=/^\/assets\/colors\/([a-z-]+)\.jpg$/.test(src);
+  const bottleCard=card&&/^\/assets\/bottles\/[a-z-]+\.png$/.test(src);
+  if(bottleCard)return <img src={src} alt={alt} width={164} height={480} loading="lazy" decoding="async"
+    srcSet={[320,640,960].map((width,index)=>productImage(src,width)+' '+[240,480,720][index]+'w').join(',')}
+    sizes="(max-width:760px) 58px, 82px"/>;
   return <img src={productImage(src)} alt={alt} width={960} height={960}
     srcSet={original?[320,640,960].map(w=>productImage(src,w)+' '+w+'w').join(','):undefined}
     sizes={hero?'(max-width:760px) 92vw, 48vw':'(max-width:760px) 44vw, (max-width:1100px) 29vw, 22vw'}

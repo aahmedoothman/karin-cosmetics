@@ -9,6 +9,7 @@ import {metric} from '../lib/browser';
 import {useStore} from './store-provider';
 import StoreChrome,{ProductPhoto,DirectionArrow,Quantity} from './store-chrome';
 import CampaignHero from './campaign-hero';
+import ColourCard from './colour-card';
 import DesignRenderer from './design-renderer';
 
 export default function Storefront({initial,locale,selectedId,view='home'}:{initial:any;locale:Language;selectedId?:string;view?:'home'|'shop'}){
@@ -31,7 +32,7 @@ export default function Storefront({initial,locale,selectedId,view='home'}:{init
   const published=initial.design?.[selectedId?'product':view==='shop'?'shop':'home'];
   const schema=selected?{'@context':'https://schema.org','@type':'Product',name:'Karin '+name(selected),image:[endpointOrigin+selected.image],brand:{'@type':'Brand',name:'Karin'},offers:{'@type':'Offer',price:selected.price,priceCurrency:'EGP',url:`${endpointOrigin}/${locale}/products/${selected.id}`}}:{'@context':'https://schema.org','@type':view==='shop'?'CollectionPage':'WebSite',name:'Karin Cosmetics',url:endpointOrigin+'/'+locale+(view==='shop'?'/shop':'')};
   const BreadcrumbArrow=locale==='ar'?ArrowLeft:ArrowRight;
-  function card(p:any){return <article className="k-product-card" key={p.id} style={{'--shade':p.hex} as React.CSSProperties}><Link className="k-product-image" href={'/'+locale+'/products/'+p.id} aria-label={t('عرض درجة ','View shade ')+name(p)}><ProductPhoto src={p.image} alt={name(p)}/><span className="k-card-action"><DirectionArrow lang={locale}/></span></Link><div className="k-card-info"><div><span className="k-product-family">{t('ألوان شعر Karin','Karin hair colour')}</span><h3><Link href={'/'+locale+'/products/'+p.id}>{name(p)}</Link></h3></div><strong>{currency(p.price,locale)}</strong></div><button className="k-card-add" onClick={()=>add(p.id,1)} disabled={!shop.acceptOrders||!store.ready}>{t('أضف إلى السلة','Add to bag')}<ShoppingBag size={17}/></button></article>;}
+  function card(p:any){return <ColourCard key={p.id} shade={p} locale={locale} canOrder={shop.acceptOrders} ready={store.ready} onAdd={()=>add(p.id,1)}/>;}
   return <StoreChrome lang={locale} initial={initial}><main id="store-content"><script type="application/ld+json" dangerouslySetInnerHTML={{__html:JSON.stringify(schema).replace(/</g,'\\u003c')}}/>
     {!selectedId&&view==='home'&&<CampaignHero products={products} locale={locale}/>}
     {!selectedId&&<section className="k-catalog k-wrap" id="catalog"><span id="collection" className="k-anchor"/><span id="colorStudio" className="k-anchor"/><span id="shop" className="k-anchor"/><div className="k-section-heading"><div><span className="k-eyebrow">FIND YOUR COLOUR</span>{view==='shop'?<h1>{t('مجموعة Karin','The Karin collection')}</h1>:<h2>{t('تشكيلة الألوان','Explore the colours')}</h2>}<p>{t('تصفح الألوان واختر الدرجة الأقرب لأسلوبك.','Explore the colours. Choose the shade that speaks to you.')}</p></div><span className="k-result-count">{filtered.length} {t('درجة',filtered.length===1?'shade':'shades')}</span></div>

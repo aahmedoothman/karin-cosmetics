@@ -58,3 +58,13 @@ Previous pushed milestone: f82bdefd5988097a8e466dd12b248f6e784bd304 (catalog CSV
 Executed verification: catalog-write.unit.cjs 20 assertions passed; catalog-api.integration.cjs 12 assertions passed against an in-memory database using real API handlers, including authorization, origin checks, archival, collection removal, concurrent revisions and audit history. TypeScript passed. After final API/UI changes, redesign.regression.cjs 31 assertions and repairs.regression.cjs 13 assertions passed; production build passed. Browser and network HTTP tests were not rerun. Tests used synthetic fixtures only, no real shipments.
 
 No migration or production deployment performed. Development stopped at explicit user request. Remaining: dedicated collection management UX and search, complete customer operations, coupons, staff roles, remaining builder and integrations work described above. Next session must first verify branch/status and this commit, then resume only when authorized. Do not treat partial admin modules as complete. No credentials, customer exports or database backups are included in this milestone.
+
+## Animated product cards — 2026-11-09
+
+The home collection, shop grid and related shades now share the blush-pink Crazy Colors card. Each uses the original bottle source and its existing responsive WebP variants, with no changes to artwork. Product IDs, links, localized names, prices and availability come from the existing catalog. The fuchsia button uses the existing cart flow and respects paused ordering.
+
+The decorative SVG strands take their colour from each shade. On desktop, two layers move in opposite directions as the bottle lifts and the background light brightens. The transitions reverse on pointer exit. Touch layouts and reduced-motion settings keep the artwork still.
+
+Verification: TypeScript and the production build passed. The local Chrome run passed 32 checks covering all 17 catalog entries, hover interpolation and exit, reduced motion, Arabic RTL and English LTR at 320, 375 and 390 px, cart adds and product navigation. The redesign regression suite passed 31 assertions and the repairs regression suite passed 13. The mobile checks used Chrome device emulation.
+
+Checkout, authentication and schemas were outside this change. No production resources were accessed or deployed. Existing administration work remains documented above.

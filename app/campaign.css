@@ -54,15 +54,62 @@
 .campaign-store .k-catalog {border:0;padding-top:35px}
 .campaign-store .k-section-heading {align-items:center}
 .campaign-store .k-product-grid {grid-template-columns:repeat(5,minmax(0,1fr));gap:22px}
-.campaign-store .k-product-card {border:1px solid var(--k-line);border-radius:23px;overflow:hidden;background:linear-gradient(150deg,color-mix(in srgb,var(--shade,#7b1462) 27%,var(--k-bg)),var(--k-bg));padding-bottom:16px;text-align:center}
-.campaign-store .k-product-image {padding:22px 10px 4px;background:radial-gradient(ellipse at center,color-mix(in srgb,var(--shade,#a51673) 60%,transparent),transparent 65%);border-radius:0}
-.campaign-store .k-product-image img {height:245px;aspect-ratio:auto;width:100%;filter:drop-shadow(0 12px 9px #0005)}
-.campaign-store .k-card-info {display:grid;justify-content:center;gap:3px;padding:10px}
-.campaign-store .k-card-info h3 {font-size:22px;font-weight:650}
-.campaign-store .k-product-family {display:none}
-.campaign-store .k-card-info strong {color:var(--k-gold);font-size:19px}
-.campaign-store .k-card-add {display:flex;align-items:center;justify-content:center;gap:8px;min-height:44px;border:1px solid var(--k-gold);border-radius:999px;margin:4px auto 0;padding:6px 15px;font-size:13px}
-.campaign-store .k-card-add:hover {background:var(--k-button);color:var(--k-on-button)}
+.campaign-store .k-product-card {
+  display:flex;flex-direction:column;text-align:center;padding:7px 7px 10px;
+  border:1px solid #edcddc;border-radius:23px;
+  background:linear-gradient(168deg,#fff7fa,#fbe9f0);color:#42142a;
+  box-shadow:0 5px 16px #58123414;
+}
+.campaign-store .k-product-image {
+  display:grid;place-items:center;isolation:isolate;
+  height:clamp(185px,18vw,257px);padding:16px 0 14px;border-radius:16px;
+  background:radial-gradient(ellipse at 50% 54%,#fff9fb 12%,transparent 70%),
+    linear-gradient(150deg,#fae9ef,#f5dae7);
+}
+.campaign-store .k-product-image img {
+  position:relative;z-index:1;display:block;width:100%;height:100%;min-height:0;
+  border-radius:0;aspect-ratio:auto;object-fit:contain;
+  filter:drop-shadow(0 9px 6px #3b172d36);
+  transform:none;transition:transform .55s cubic-bezier(.2,.7,.25,1);
+}
+.campaign-store .k-product-image::before {
+  content:'';position:absolute;inset:0;pointer-events:none;opacity:0;
+  background:radial-gradient(ellipse at 48% 37%,#fff9fb 5%,transparent 62%);
+  transition:opacity .6s ease;
+}
+.k-card-hair {
+  position:absolute;inset:0;width:100%;height:100%;pointer-events:none;
+  mask-image:linear-gradient(90deg,transparent,#000 13%,#000 87%,transparent);
+}
+.k-card-flow {transition:transform .8s cubic-bezier(.2,.65,.25,1),opacity .65s ease}
+.k-card-flow-soft {transform:translateY(22px) rotate(8deg);transform-origin:center;opacity:.22}
+.k-card-flow-main {transform:translateY(7px);opacity:.5}
+.k-card-flow-body {stroke:color-mix(in srgb,var(--shade,#ad1758) 31%,#f4dce6)}
+.k-card-strand {stroke:color-mix(in srgb,var(--shade,#ad1758) 77%,#38152a);stroke-width:1.2}
+.k-card-strand-shine {stroke:color-mix(in srgb,var(--shade,#ad1758) 26%,#fff6fc);stroke-width:2.1}
+.campaign-store .k-card-info {display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;gap:3px;padding:10px 4px;flex:1;align-content:end}
+.campaign-store .k-card-info h3 {font-size:clamp(14px,1.45vw,20px);font-weight:700;line-height:1.45;overflow-wrap:anywhere;margin:0}
+.campaign-store .k-card-info strong {color:#901148;font-size:clamp(14px,1.4vw,19px);font-weight:750}
+.campaign-store .k-card-add {
+  display:flex;align-items:center;justify-content:center;gap:7px;min-height:44px;
+  border:1px solid transparent;border-radius:999px;padding:6px 9px;
+  background:linear-gradient(160deg,#ce0b57,#a50843);color:#fff;
+  font-size:clamp(12px,1vw,14px);line-height:1.35;font-weight:700;
+  transition:background-color .2s,box-shadow .2s;
+}
+.campaign-store .k-card-add svg {flex:none}
+.campaign-store .k-card-add:disabled {background:#efdae4;color:#71405a;border-color:#e4c4d4;cursor:not-allowed}
+.campaign-store .k-product-card :focus-visible {outline:2px solid #7d1044;outline-offset:2px}
+.campaign-store .k-card-add:focus-visible {box-shadow:0 0 0 2px #fff}
+@media (hover:hover) and (pointer:fine) {
+  .campaign-store .k-card-add:hover:not(:disabled) {background:#a20845;box-shadow:0 3px 9px #a2084540}
+}
+@media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
+  :root:not([data-motion=off]) .campaign-store .k-product-card:hover .k-product-image::before {opacity:.8}
+  :root:not([data-motion=off]) .campaign-store .k-product-card:hover .k-card-flow-main {transform:translate(10px,-16px) scale(1.08);opacity:.79}
+  :root:not([data-motion=off]) .campaign-store .k-product-card:hover .k-card-flow-soft {transform:translate(-7px,34px) rotate(2deg) scale(1.04);opacity:.43}
+  :root:not([data-motion=off]) .campaign-store .k-product-card:hover .k-product-image img {transform:translateY(-5px) scale(1.025)}
+}
 .campaign-store .k-detail {direction:ltr;gap:5%;grid-template-columns:1fr 1fr}
 .campaign-store[dir=rtl] .k-detail-copy {direction:rtl}
 .campaign-store .k-gallery {display:flex;flex-direction:row-reverse;align-items:start;gap:15px}
@@ -141,14 +188,12 @@
   .campaign-copy .k-button {grid-row:5;justify-self:center;width:min(100%,300px);min-height:48px}
   .campaign-store .k-catalog {padding-top:18px}
   .campaign-store .k-product-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-  .campaign-store .k-product-card {display:flex;flex-direction:column}
-  .campaign-store .k-product-image {padding:12px 6px 0}
-  .campaign-store .k-product-image img {height:clamp(118px,39vw,210px)}
-  .campaign-store .k-card-info {padding:8px 5px}
-  .campaign-store .k-card-info h3 {font-size:16px;line-height:1.45;overflow-wrap:anywhere}
-  .campaign-store .k-card-info strong {font-size:16px}
-  .campaign-store .k-card-add {font-size:12px;gap:5px;padding:6px 8px;margin-top:auto;max-width:calc(100% - 12px)}
-  .campaign-store .k-product-card {border-radius:18px}
+  .campaign-store .k-product-card {border-radius:18px;padding:5px 5px 7px}
+  .campaign-store .k-product-image {height:clamp(129px,42vw,219px);padding:9px 0 8px;border-radius:13px}
+  .campaign-store .k-card-info {padding:8px 3px}
+  .campaign-store .k-card-info h3 {font-size:14px}
+  .campaign-store .k-card-add {gap:4px;padding-inline:5px}
+  .campaign-store .k-card-add svg {width:14px;height:14px}
   .campaign-store .k-detail {grid-template-columns:minmax(0,1fr);gap:14px}
   .campaign-store .k-gallery {display:grid;grid-template-columns:minmax(0,1fr);gap:4px}
   .campaign-store .k-gallery-main img {height:clamp(180px,56vw,300px)}
