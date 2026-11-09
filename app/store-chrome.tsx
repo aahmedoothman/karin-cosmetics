@@ -15,7 +15,7 @@ export function ProductPhoto({src,alt,hero=false,card=false}:{src:string;alt:str
   const bottleCard=card&&/^\/assets\/bottles\/[a-z-]+\.png$/.test(src);
   if(bottleCard)return <img src={src} alt={alt} width={164} height={480} loading="lazy" decoding="async"
     srcSet={[320,640,960].map((width,index)=>productImage(src,width)+' '+[240,480,720][index]+'w').join(',')}
-    sizes="(max-width:760px) 58px, 82px"/>;
+    sizes="(max-width:760px) 68px, 90px"/>;
   return <img src={productImage(src)} alt={alt} width={960} height={960}
     srcSet={original?[320,640,960].map(w=>productImage(src,w)+' '+w+'w').join(','):undefined}
     sizes={hero?'(max-width:760px) 92vw, 48vw':'(max-width:760px) 44vw, (max-width:1100px) 29vw, 22vw'}
@@ -56,7 +56,29 @@ export default function StoreChrome({children,lang,initial,checkout=false}:{chil
       <Link className="k-language" href={other} onClick={e=>{e.preventDefault();router.push(pathname.replace(/^\/(ar|en)(?=\/|$)/,lang==='ar'?'/en':'/ar')+location.search);}} aria-label={lang==='ar'?'Switch to English':'التبديل إلى العربية'}>{lang==='ar'?'EN':'ع'}</Link>
       <button className="k-icon" onClick={appearance} aria-label={t(dark?'الوضع الفاتح':'الوضع الداكن',dark?'Light mode':'Dark mode')}>{dark?<Sun size={20}/>:<Moon size={20}/>}</button><button className="k-icon k-bag-trigger" aria-label={t('حقيبة التسوق','Shopping bag')} onClick={()=>s.setBagOpen(true)}><ShoppingBag size={21}/>{count>0&&<span>{count}</span>}</button>{!checkout&&<button className="k-icon k-menu-trigger" aria-label={t('فتح القائمة','Open menu')} aria-haspopup="dialog" onClick={()=>M(true)}><Menu size={21}/></button>}
     </div></div></header>{children}
-    <footer className="k-footer" id="assistance"><span id="help" className="k-anchor"/><div className="k-footer-top k-wrap"><div><span className="k-eyebrow">KARIN NATURAL COSMETIC</span><h2>{t('اختيارك يبدأ من هنا.','Make it your colour.')}</h2><p>{t('استكشف الدرجات، ويسعدنا الإجابة عن استفساراتك عبر حساباتنا الرسمية.','Explore the shades. Our official channels are here for your questions.')}</p></div><div className="k-footer-links"><Link href={'/'+lang+'/shop'}>{t('تسوّق كل الدرجات','Shop all shades')}<DirectionArrow lang={lang}/></Link><Link href={'/'+lang+'/how-to-use'}>{t('دليل الاستخدام','Application guide')}<DirectionArrow lang={lang}/></Link><Link href={'/'+lang+'/about'}>{t('عن كارين','About Karin')}<DirectionArrow lang={lang}/></Link>{shop.facebook&&<a href={shop.facebook} target="_blank" rel="noopener noreferrer"><Globe size={18}/> Facebook <DirectionArrow lang={lang}/></a>}{shop.instagram&&<a href={shop.instagram} target="_blank" rel="noopener noreferrer"><Camera size={18}/> Instagram</a>}{shop.tiktok&&<a href={shop.tiktok} target="_blank" rel="noopener noreferrer">TikTok</a>}{shop.whatsapp&&<a href={'https://wa.me/'+shop.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>}{shop.supportPhone&&<a href={'tel:'+shop.supportPhone}>{shop.supportPhone}</a>}{shop.supportEmail&&<a href={'mailto:'+shop.supportEmail}>{shop.supportEmail}</a>}{shop[lang==='ar'?'serviceHoursAr':'serviceHoursEn']&&<p className="k-caption">{shop[lang==='ar'?'serviceHoursAr':'serviceHoursEn']}</p>}</div></div><div className="k-footer-bottom k-wrap"><small>© {new Date().getFullYear()} Karin Cosmetics</small><div>{receipt&&<a href={receipt}>{t('متابعة آخر طلب','Track your last order')}</a>}<button onClick={()=>P('privacy')}>{t('خصوصية بيانات الطلب','Order data privacy')}</button>{shop[lang==='ar'?'returnsAr':'returnsEn']&&<button onClick={()=>P('returns')}>{t('الإلغاء والاسترجاع','Cancellation & returns')}</button>}<Link href="/admin">{t('الإدارة','Admin')}</Link></div></div></footer>
+    <footer className="k-footer" id="assistance">
+      <span id="help" className="k-anchor"/>
+      <div className="k-footer-top k-wrap">
+        <div className="karin-footer-brand">
+          <Link className="k-logo" href={'/'+lang} aria-label={t('كارين، الصفحة الرئيسية','Karin home')}>
+            <img src="/assets/campaign/logo-dark.webp" alt="" width={140} height={96} loading="lazy"/>
+          </Link>
+          <h2>{t('اختيارك يبدأ من هنا.','Make it your colour.')}</h2>
+          <p>{t('تسوّقي مجموعة كارين كريزي كولرز وتعرّفي على دليل الاستخدام.','Explore Karin Crazy Colors and find the application guide.')}</p>
+        </div>
+        <nav className="karin-footer-group" aria-label={t('استكشفي كارين','Explore Karin')}>
+          <h3>{t('استكشفي كارين','Explore Karin')}</h3>
+          <Link href={'/'+lang+'/shop'}>{t('كل الدرجات','All shades')}<DirectionArrow lang={lang}/></Link>
+          <Link href={'/'+lang+'/how-to-use'}>{t('دليل الاستخدام','Application guide')}<DirectionArrow lang={lang}/></Link>
+          <Link href={'/'+lang+'/about'}>{t('عن كارين','About Karin')}<DirectionArrow lang={lang}/></Link>
+        </nav>
+        {(shop.facebook||shop.instagram||shop.tiktok||shop.whatsapp||shop.supportPhone||shop.supportEmail||shop[lang==='ar'?'serviceHoursAr':'serviceHoursEn'])&&
+          <div className="karin-footer-group">
+            <h3>{t('القنوات الرسمية','Official channels')}</h3>
+            {shop.facebook&&<a href={shop.facebook} target="_blank" rel="noopener noreferrer"><Globe size={18}/> Facebook <DirectionArrow lang={lang}/></a>}{shop.instagram&&<a href={shop.instagram} target="_blank" rel="noopener noreferrer"><Camera size={18}/> Instagram</a>}{shop.tiktok&&<a href={shop.tiktok} target="_blank" rel="noopener noreferrer">TikTok</a>}{shop.whatsapp&&<a href={'https://wa.me/'+shop.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>}{shop.supportPhone&&<a href={'tel:'+shop.supportPhone}>{shop.supportPhone}</a>}{shop.supportEmail&&<a href={'mailto:'+shop.supportEmail}>{shop.supportEmail}</a>}{shop[lang==='ar'?'serviceHoursAr':'serviceHoursEn']&&<p className="k-caption">{shop[lang==='ar'?'serviceHoursAr':'serviceHoursEn']}</p>}
+          </div>}
+      </div>
+      <div className="k-footer-bottom k-wrap"><small>© {new Date().getFullYear()} Karin Cosmetics</small><div>{receipt&&<a href={receipt}>{t('متابعة آخر طلب','Track your last order')}</a>}<button onClick={()=>P('privacy')}>{t('خصوصية بيانات الطلب','Order data privacy')}</button>{shop[lang==='ar'?'returnsAr':'returnsEn']&&<button onClick={()=>P('returns')}>{t('الإلغاء والاسترجاع','Cancellation & returns')}</button>}<Link href="/admin">{t('الإدارة','Admin')}</Link></div></div></footer>
     {menu&&<Sheet title={t('القائمة','Menu')} kind="menu" close={()=>M(false)}><nav className="k-sheet-content k-mobile-links"><button className="k-text-button" onClick={()=>{M(false);S(true);}}><Search size={18}/>{t('البحث في المتجر','Search store')}</button>{links}</nav></Sheet>}
     {search&&<Sheet title={t('ما الدرجة التي تبحث عنها؟','Find your shade')} kind="search" close={()=>S(false)}><form className="k-sheet-content k-search-form" onSubmit={e=>{e.preventDefault();S(false);router.push('/'+lang+'/shop'+(query?'?q='+encodeURIComponent(query):''));}}><label htmlFor="global-search">{t('اسم الدرجة أو اللون','Shade name or colour')}</label><input id="global-search" type="search" autoFocus value={query} onChange={e=>Q(e.target.value)} placeholder={t('مثل: موف، بني، أزرق','Try purple, brown, blue')}/><button className="k-button">{t('عرض النتائج','View results')}<Search size={18}/></button></form></Sheet>}
     {s.bagOpen&&<Sheet title={t('حقيبة التسوق','Your bag')} kind="bag" close={()=>s.setBagOpen(false)}><div className="k-bag-content">

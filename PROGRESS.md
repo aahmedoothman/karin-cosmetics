@@ -86,3 +86,11 @@ Finished the four-step bilingual application guide, the About Karin page, locali
 TypeScript, the production build and 44 regression assertions passed on the final tree. Final Chrome verification passed 180 checks over eight customer-facing surfaces at 320, 375, 390, 768, 1024 and 1440 px in Arabic RTL and English LTR, including cart-to-checkout, shade switching, mobile menu, filters, search, dark mode and privacy in a synthetic receipt. Mobile tests used device emulation. Screenshots and a recording of actual hover transitions were captured outside the repository.
 
 The development branch contains all three stages. No production deployment, asset replacement, schema changes, or new business claims.
+
+## Final visual and motion polish
+
+Refined the existing storefront. Product cards use larger uncropped bottles, stronger shade-tinted hair layers and short reversible hover motion. Shop by Color has keyboard-accessible previous and next controls with RTL/LTR direction, scroll snapping on mobile, and distinct focus and press states. The guide has clearer numbered steps and a prominent 40–50 minute panel that remains pending verification against printed instructions. The footer groups existing configured channels separately from store links and shows the Karin logo.
+
+Hero and section transitions are shorter. Coarse-pointer devices skip per-card reveals and the secondary hair layer. Reduced-motion and hidden-tab changes cancel running section reveals. Original artwork and store business logic were preserved.
+
+TypeScript and the production build passed. The redesign and repair suites passed 44 assertions. Chrome passed 32 product-card checks and 84 shade-strip and guide checks across Arabic RTL and English LTR at 320, 375, 390, 768, 1024 and 1440 px. Mobile testing used Chrome emulation. Screenshots and a hover recording were captured locally. No production deployment.

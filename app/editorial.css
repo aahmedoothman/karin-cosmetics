@@ -67,7 +67,12 @@
   color:#fff;background:linear-gradient(0deg,#1d081ed9,transparent 83%),var(--shade,#a61a57);
   overflow:hidden;scroll-snap-align:start;font-weight:650;
 }
-.karin-shade-strip a::before {content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(110deg,#1a0a1c,var(--shade),#fff2eb);mask:url('/assets/campaign/hair.webp') 68% 42% / 190% auto;mask-mode:luminance;opacity:.95}
+.karin-shade-strip a::before {
+  content:'';position:absolute;inset:-14%;z-index:-1;
+  background:linear-gradient(145deg,#130915 15%,var(--shade) 36%,#ffe7ef 54%,var(--shade) 70%,#1d0a1b);
+  mask:url('/assets/campaign/hair.webp') right 43% / 135% 110%;mask-mode:luminance;
+  opacity:1;
+}
 .karin-home-editorial {display:grid;grid-template-columns:1fr 1.25fr;gap:18px;padding-block:30px}
 .karin-home-editorial section {border-radius:22px;overflow:hidden;border:1px solid var(--k-line)}
 .karin-home-editorial h2 {font-size:clamp(21px,2.3vw,32px);line-height:1.3;margin:6px 0 10px}
@@ -77,14 +82,40 @@
 .karin-about-teaser {display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);background:var(--k-soft)}
 .karin-about-teaser img {width:100%;height:100%;object-fit:cover}
 .karin-about-teaser div {padding:clamp(14px,2vw,28px)}
-.karin-hair-texture {position:absolute;inset:-15%;pointer-events:none;isolation:isolate;mask-image:linear-gradient(90deg,transparent,#000 16%,#000 84%,transparent)}
-.karin-hair-texture .k-card-flow {
-  position:absolute;inset:0;
-  background:linear-gradient(145deg,color-mix(in srgb,var(--shade) 65%,#241222) 18%,var(--shade) 43%,color-mix(in srgb,var(--shade) 51%,#fff3ea) 54%,var(--shade) 69%,#3a172c);
-  mask:url('/assets/campaign/hair.webp') 83% 30% / 140% 108% no-repeat;mask-mode:luminance;
+.karin-hair-texture {
+  position:absolute;inset:0;pointer-events:none;isolation:isolate;
+  mask-image:linear-gradient(90deg,transparent,#000 16%,#000 84%,transparent),
+    linear-gradient(0deg,transparent,#000 13%,#000 84%,transparent);
+  mask-composite:intersect;
 }
-.karin-hair-texture .k-card-flow-main {opacity:.89}
-.karin-hair-texture .k-card-flow-soft {opacity:.42;transform:translate(-15px,18px) rotate(7deg)}
+.karin-hair-texture .k-card-flow {
+  position:absolute;inset:-24% -10%;
+  mask:url('/assets/campaign/hair.webp') right 55% / 120% 100% no-repeat;
+  mask-mode:luminance;
+}
+.karin-hair-texture .k-card-flow-main {
+  background:linear-gradient(125deg,color-mix(in oklab,var(--shade) 75%,#170918) 19%,
+    var(--shade) 38%,color-mix(in oklab,var(--shade) 76%,#fff3ea) 48%,
+    color-mix(in oklab,var(--shade) 58%,#170918) 62%,var(--shade) 84%);
+  transform:translate(-3%,16%) rotate(-9deg);
+  opacity:1;
+}
+.karin-hair-texture .k-card-flow-soft {
+  background:linear-gradient(125deg,transparent 12%,var(--shade) 30%,
+    color-mix(in oklab,var(--shade) 52%,white) 54%,var(--shade) 72%,transparent 91%);
+  transform:translate(6%,26%) rotate(-11deg);
+  opacity:.66;
+}
+.campaign-store .k-product-image {
+  padding-block:12px 9px;
+  background:radial-gradient(ellipse at 50% 45%,#fffafc 7%,transparent 66%),
+    radial-gradient(ellipse at 69% 55%,color-mix(in oklab,var(--shade) 22%,transparent),transparent 74%),
+    linear-gradient(145deg,#fcf0f4,#efcedf);
+}
+.campaign-store .k-product-image::before {
+  background:radial-gradient(ellipse at 54% 44%,#fff8f6cc 5%,transparent 59%);
+}
+.campaign-store .k-product-image img {filter:drop-shadow(0 8px 7px #3b172d45)}
 .campaign-store .k-product-card {transition:transform .4s var(--karin-ease),box-shadow .4s var(--karin-ease)}
 .campaign-store :is(.k-button,.k-card-add,.k-icon,.k-filter-toggle,.k-qty button) {transition:background-color .2s,box-shadow .2s,transform .2s}
 .campaign-store :is(.k-button,.k-card-add,.k-icon):active:not(:disabled) {transform:scale(.98)}
@@ -92,15 +123,21 @@
 @keyframes karin-editorial-in {from {opacity:.52;translate:0 11px} to {opacity:1;translate:0 0}}
 @keyframes karin-orbit-in {from {opacity:.16;scale:.91} to {opacity:1;scale:1}}
 @media (prefers-reduced-motion:no-preference) {
-  :root:not([data-motion=off]) .karin-hero-copy {animation:karin-editorial-in .72s var(--karin-ease) both}
-  :root:not([data-motion=off]) .karin-hero-product {animation:karin-editorial-in .9s .1s var(--karin-ease) both}
-  :root:not([data-motion=off]) .karin-hero-orbit {animation:karin-orbit-in 1.4s var(--karin-ease) both}
-  :root:not([data-motion=off]) .karin-editorial-hero::before {animation:karin-orbit-in 1.6s var(--karin-ease) both}
+  :root:not([data-motion=off]) .karin-hero-copy {animation:karin-editorial-in .5s var(--karin-ease) both}
+  :root:not([data-motion=off]) .karin-hero-product {animation:karin-editorial-in .66s .06s var(--karin-ease) both}
+  :root:not([data-motion=off]) .karin-hero-orbit {animation:karin-orbit-in .86s var(--karin-ease) both}
   :root:not([data-motion=off]) .campaign-store .k-sheet[open] {animation:karin-editorial-in .26s var(--karin-ease) both}
 }
 @media (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference) {
   :root:not([data-motion=off]) .campaign-store .k-product-card:hover {transform:translateY(-4px);box-shadow:0 13px 28px #58123429}
-  :root:not([data-motion=off]) .campaign-store .k-product-card:hover .karin-hair-texture .k-card-flow-main {opacity:1}
+  :root:not([data-motion=off]) .campaign-store .k-product-card:hover .k-card-flow-main {
+    transform:translate(1%,9%) rotate(-5deg) scale(1.09);
+  }
+  :root:not([data-motion=off]) .campaign-store .k-product-card:hover .k-card-flow-soft {
+    transform:translate(1%,19%) rotate(-15deg) scale(1.06);opacity:.89;
+  }
+  :root:not([data-motion=off]) .campaign-store .k-product-card:hover .k-product-image img {transform:translateY(-4px) scale(1.012)}
+  :root:not([data-motion=off]) .karin-shade-strip a:hover::before {transform:translateY(-5px) scale(1.05)}
 }
 @media (max-width:760px) {
   .karin-hero-grid {display:flex;flex-direction:column;align-items:stretch;min-height:0;gap:0}
@@ -246,5 +283,75 @@
 }
 
 .campaign-store .k-footer .k-footer-bottom {direction:inherit;display:flex;grid-template-columns:none;color:#e4c5d5}
-.campaign-store .k-footer .k-footer-bottom small {color:#e4c5d5}
+.campaign-store .k-footer .k-footer-bottom small {color:#e4c5d5;flex-basis:auto;border:0;padding:0}
 .campaign-store .k-footer .k-footer-bottom>div {border:0}
+
+/* Finishing details for shade discovery and the application guide. */
+.karin-discovery-tools,.karin-shade-controls {display:flex;align-items:center;gap:8px}
+.karin-discovery-tools {gap:14px}
+.karin-shade-controls button {
+  display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--k-line);
+  border-radius:50%;color:var(--k-ink);background:var(--k-surface);
+}
+.karin-shade-controls button[aria-disabled=true] {opacity:.45;cursor:default}
+.karin-shade-controls button:not([aria-disabled=true]):hover {border-color:var(--k-gold);color:var(--k-gold)}
+.karin-shade-strip {
+  overscroll-behavior-inline:contain;scroll-padding-inline:4px;scrollbar-color:var(--k-line) transparent;
+  scrollbar-width:thin;
+}
+.karin-shade-strip a {
+  border:1px solid color-mix(in oklab,var(--shade) 65%,white);
+  background:radial-gradient(ellipse at 67% 21%,color-mix(in oklab,var(--shade) 55%,white),transparent 74%),var(--shade);
+}
+.karin-shade-strip a span {
+  align-self:end;margin:-10px;padding:12px 10px 8px;
+  background:linear-gradient(0deg,#180915eb 38%,#18091500);
+  line-height:1.4;
+}
+.karin-shade-strip a:is(:focus-visible,:active) {outline:2px solid var(--k-gold);outline-offset:1px}
+@media (prefers-reduced-motion:no-preference) {
+  :root:not([data-motion=off]) .karin-shade-strip a::before {transition:transform .55s var(--karin-ease)}
+  :root:not([data-motion=off]) .karin-shade-strip a:active::before {transform:scale(.96)}
+}
+.campaign-store .karin-application .k-guide-steps li {box-shadow:0 6px 20px #4c173011}
+.campaign-store .karin-application .k-guide-icon {
+  background:linear-gradient(120deg,#2f0e28f2,#721d43a8),url('/assets/campaign/hair.webp') right 38% / cover;
+  border-block-end:1px solid #9c4d70;
+}
+.karin-application .k-guide-icon svg {filter:drop-shadow(0 2px 5px #fbc88055)}
+.karin-application .k-guide-steps h2 {line-height:1.3}
+.karin-application .k-guide-steps p {line-height:1.72}
+.karin-guide-duration {
+  min-height:164px;border-color:#d59c6b;
+  box-shadow:inset 0 0 24px #de69a025,0 8px 24px #4c173025;
+}
+.karin-duration-icon {display:grid;place-items:center;width:68px;height:68px;flex:none;border-radius:50%;border:1px solid #dfa075;background:#f9ad7218}
+.karin-guide-duration strong {font-size:clamp(36px,6vw,65px);line-height:1.18;margin-block:5px 8px}
+.karin-duration-status {display:inline-block;margin-block-end:8px;padding:2px 10px;border-radius:999px;border:1px solid #ffcf9f94;color:#ffe0bc;font-size:12px}
+.campaign-store .k-footer .k-footer-top {
+  grid-template-columns:minmax(0,1.5fr) repeat(2,minmax(0,1fr));
+  gap:clamp(20px,5vw,70px);
+}
+.karin-footer-brand .k-logo {margin-block-end:8px}
+.karin-footer-brand p {margin:0}
+.karin-footer-group {display:grid;align-content:start}
+.karin-footer-group h3 {font-size:16px;color:#f7c98e;margin-block:10px 8px}
+.karin-footer-group a {display:flex;align-items:center;gap:8px;width:fit-content;max-width:100%;min-height:44px;overflow-wrap:anywhere}
+.karin-footer-group a:hover {text-decoration:underline;text-underline-offset:4px}
+.karin-footer-group a svg {width:16px;flex:none}
+@media (pointer:coarse), (prefers-reduced-motion:reduce) {
+  .karin-hair-texture .k-card-flow-soft {display:none}
+}
+@media (max-width:760px) {
+  .campaign-store .k-product-image {height:clamp(140px,44vw,222px);padding-block:8px 7px}
+  .karin-discovery .k-section-heading {flex-wrap:wrap;gap:6px}
+  .karin-discovery-tools {justify-content:space-between;width:100%}
+  .karin-shade-strip {grid-auto-columns:clamp(105px,31vw,155px);scroll-snap-type:x mandatory}
+  .karin-shade-strip a {min-height:76px}
+  .karin-duration-icon {width:48px;height:48px}
+  .karin-duration-icon svg {width:26px;height:26px}
+  .campaign-store .k-footer .k-footer-top {grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .campaign-store:not(:has(.k-sticky-buy)) .k-footer .k-footer-bottom {padding-block-end:20px}
+  .karin-footer-brand {grid-column:1/-1}
+  .karin-footer-group a {font-size:13px}
+}

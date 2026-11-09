@@ -81,17 +81,18 @@ export default async function HowToUse({params}: Params) {
             const Icon = icons[index];
             return (
               <li key={title} data-reveal={index}>
-                <div className="k-guide-icon" aria-hidden="true"><Icon size={30}/><span>{numbers.format(index + 1)}</span></div>
+                <div className="k-guide-icon" aria-hidden="true"><span>{numbers.format(index + 1)}</span><Icon size={32} strokeWidth={1.6}/></div>
                 <div><h2>{title}</h2><p>{description}</p></div>
               </li>
             );
           })}
         </ol>
         <aside className="karin-guide-duration" aria-labelledby="duration-title" data-reveal="">
-          <Timer size={40} aria-hidden="true"/>
+          <span className="karin-duration-icon" aria-hidden="true"><Timer size={38} strokeWidth={1.5}/></span>
           <div><h2 id="duration-title">{ar ? 'مدة الانتظار المقترحة' : 'Proposed processing time'}</h2>
             <strong><bdi dir="ltr">{numbers.format(40)}–{numbers.format(50)}</bdi> {ar ? 'دقيقة' : 'minutes'}</strong>
-            <p>{ar ? 'المدة قيد التحقق قبل النشر. اتبعي التعليمات المطبوعة على عبوتك.' : 'Pending verification before release. Follow the directions printed on your bottle.'}</p>
+            <span className="karin-duration-status">{ar ? 'قيد التحقق قبل النشر' : 'Verification pending'}</span>
+            <p>{ar ? 'اتبعي التعليمات الرسمية المطبوعة على عبوتك.' : 'Follow the official directions printed on your bottle.'}</p>
           </div>
         </aside>
         <section className="k-guide-tips" aria-labelledby="guide-tips" data-reveal="">
