@@ -72,3 +72,9 @@ Checkout, authentication and schemas were outside this change. No production res
 ## Cinematic storefront, stage 1
 
 Built the editorial homepage with original campaign imagery and catalog packaging, all-shade discovery, a featured product preview, guide and brand teasers, a shared palette and a reduced-motion-aware reveal system. Product cards now animate shade-tinted photographic texture independently of the bottle. Stage 1 passed TypeScript, the production build, 31 redesign assertions and 32 Chrome checks for catalog mapping, card animation, reduced motion, mobile layouts, cart and links. Development branch only.
+
+## Cinematic storefront, stage 2
+
+The shop has a responsive catalog banner and desktop filter rail. Product detail, cart, checkout and receipt now share the editorial palette and commerce surfaces. The cart keeps its mobile dialog and gains a desktop order-summary column. Shade and checkout transitions respect reduced motion. Catalog, quantity, delivery, cash on delivery, checkout, order, receipt and privacy logic were preserved.
+
+Stage 2 passed TypeScript, the production build, 32 Chrome checks, 44 regression assertions and 50 local Worker commerce assertions using synthetic data. No production access or deployment.

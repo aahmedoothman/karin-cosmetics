@@ -120,3 +120,74 @@
   .karin-home-editorial {grid-template-columns:minmax(0,1fr);padding-block:22px}
   .karin-about-teaser img {object-position:50% center}
 }
+
+/* Collection and purchase views */
+.karin-shop-banner {
+  padding-block:clamp(24px,4vw,62px);color:#fff5fa;
+  background:linear-gradient(100deg,#210b1ce8,#460f32a8),url('/assets/campaign/hair.webp') center 29% / cover;
+}
+.karin-shop-banner .karin-editorial-kicker {color:#ffb1d2;margin:0}
+.karin-shop-banner h1 {font-size:clamp(32px,4.5vw,62px);color:var(--karin-gold);line-height:1.2;margin:6px 0}
+.karin-shop-banner p {margin:0;color:#f3dbe8}
+.karin-filter-heading {display:none}
+.campaign-store .k-filters {border:1px solid var(--k-line)}
+.campaign-store .k-inline-search {max-width:none;width:100%;transition:box-shadow .2s}
+.campaign-store .k-detail {direction:inherit;align-items:start}
+.campaign-store .karin-detail-stage {
+  position:relative;isolation:isolate;overflow:hidden;
+  background:radial-gradient(ellipse at 46% 38%,var(--k-surface),transparent 75%),
+    linear-gradient(150deg,var(--k-soft),color-mix(in srgb,var(--shade) 18%,var(--k-surface)));
+  border:1px solid var(--k-line);box-shadow:0 12px 35px #a6115719;
+}
+.campaign-store .karin-detail-stage::after {
+  content:'';position:absolute;z-index:-1;inset:10% 9% 12%;border-radius:50%;
+  border-bottom:2px solid #d89b4a85;transform:rotate(-13deg);pointer-events:none;
+}
+.campaign-store .karin-detail-stage img {position:relative;z-index:1;height:clamp(290px,38vw,515px)}
+.campaign-store .k-detail-copy {border:1px solid var(--k-line);border-radius:24px;padding:clamp(14px,2vw,30px);background:var(--k-surface)}
+.campaign-store .k-shades i {background:linear-gradient(145deg,#fff6,transparent 52%,#21051945),var(--shade);border:1px solid #fff6}
+.campaign-store .k-shades label {transition:box-shadow .24s,border-color .24s}
+.campaign-store .k-shades label.is-selected {box-shadow:0 0 0 2px #c6156735}
+.campaign-store .karin-bag-photo {position:relative;isolation:isolate;background:var(--k-soft)}
+.campaign-store .karin-bag-photo img {position:relative}
+.campaign-store .k-bag-summary h3 {font-size:19px;margin:0 0 12px}
+.campaign-store .k-bag-summary strong {color:var(--k-gold);font-weight:750}
+.campaign-store .k-bag-line {background:var(--k-surface)}
+.campaign-store .k-checkout-heading h1 {font-size:clamp(30px,4.2vw,55px);line-height:1.2}
+.campaign-store .k-checkout-layout {gap:clamp(16px,3vw,42px)}
+.campaign-store .k-checkout-summary {border:1px solid var(--k-line)}
+.campaign-store .k-checkout-summary h2 {margin-block-end:16px}
+.campaign-store .k-steps li>span {transition:background-color .25s,color .25s}
+.campaign-store :is(.k-form-grid input,.k-form-grid select,.k-form-grid textarea):focus-visible {outline-color:var(--k-gold)}
+.campaign-receipt .receipt-heading {padding:clamp(14px,4vw,36px);border-radius:22px;color:#fff2f8;background:linear-gradient(95deg,#2b0b24e8,#4b102f9e),url('/assets/campaign/hair.webp') center / cover}
+.campaign-receipt .receipt-heading h1 {color:#ffe1aa}
+.campaign-receipt .receipt-heading>span {color:#ffc1d9}
+@media (prefers-reduced-motion:no-preference) {
+  :root:not([data-motion=off]) .karin-checkout-step {animation:karin-editorial-in .26s var(--karin-ease) both}
+  :root:not([data-motion=off]) .karin-detail-stage {animation:karin-editorial-in .4s var(--karin-ease) both}
+}
+@media (min-width:761px) {
+  .campaign-store :is(.karin-featured,.k-related) .k-product-grid {grid-template-columns:repeat(4,minmax(0,1fr))}
+  .campaign-store .k-bag:has(.k-bag-summary) {
+    display:grid;grid-template-columns:minmax(0,1.55fr) minmax(260px,1fr);grid-template-rows:auto minmax(0,1fr);
+    inset:0;margin:auto;width:min(1000px,94vw);height:min(710px,90dvh);border-radius:24px;border:1px solid var(--k-line);
+  }
+  .campaign-store .k-bag .k-sheet-head {grid-column:1/-1}
+  .campaign-store .k-bag-summary {align-self:start;margin:20px 20px 20px 0;margin-inline:0 20px;border:1px solid var(--k-line);border-radius:18px;max-height:calc(min(710px,90dvh) - 108px);overflow:auto}
+}
+@media (min-width:1024px) {
+  .campaign-store .karin-shop-catalog {display:grid;grid-template-columns:minmax(190px,230px) minmax(0,1fr);column-gap:24px;align-items:start}
+  .karin-shop-catalog>.k-section-heading {grid-column:1/-1}
+  .karin-shop-catalog>.k-catalog-toolbar {grid-column:2;grid-row:2}
+  .karin-shop-catalog .k-filter-toggle {display:none}
+  .campaign-store .karin-shop-catalog>.k-filters {display:grid;grid-column:1;grid-row:2/4;gap:16px;position:sticky;top:20px}
+  .karin-shop-catalog .karin-filter-heading {display:block;margin:0;font-size:18px}
+  .campaign-store .karin-shop-catalog>.k-product-grid {grid-column:2;grid-row:3;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+  .karin-shop-catalog>.k-empty {grid-column:2}
+}
+@media (max-width:760px) {
+  .campaign-store .karin-detail-stage img {height:clamp(210px,64vw,340px)}
+  .campaign-store .k-detail-copy {border-radius:18px}
+  .campaign-store .k-checkout-heading {margin-bottom:16px}
+  .campaign-store .k-bag-summary h3 {font-size:16px;margin-bottom:4px}
+}

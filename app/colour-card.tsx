@@ -5,15 +5,9 @@ import {type CSSProperties} from 'react';
 import {ShoppingBag} from 'lucide-react';
 import {currency, type Language} from '../lib/storefront';
 import {ProductPhoto} from './store-chrome';
+import {HairFlow} from './hair-flow';
 
 type Shade = {id:string; ar:string; en:string; hex:string; image:string; price:number; active:boolean};
-
-export function HairFlow() {
-  return <span className="karin-hair-texture" aria-hidden="true">
-    <span className="k-card-flow k-card-flow-soft"/>
-    <span className="k-card-flow k-card-flow-main"/>
-  </span>;
-}
 
 export default function ColourCard({shade, locale, canOrder, ready, onAdd, order}: {
   shade:Shade; locale:Language; canOrder:boolean; ready:boolean; onAdd:()=>void; order:number;
