@@ -2,7 +2,7 @@ export type Language = 'ar' | 'en';
 export const maxOrderLines = 30;
 export const shadeAliases: Record<string, string> = {
   purple: 'بنفسجي بنفسجى موف violet mauve',
-  'blue-black': 'اسود ازرق اسود مزرق كحلي midnight navy',
+  'blue-black': 'اسود ازرق اسود مزرق كحلي midnight navy blue black blue-black',
   'golden-yellow': 'ذهبي دهبي اصفر gold yellow',
   burgundy: 'نبيتي عنابي خمري wine red',
   'fiery-red': 'احمر ناري red scarlet',

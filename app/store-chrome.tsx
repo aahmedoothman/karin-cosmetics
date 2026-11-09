@@ -11,15 +11,26 @@ import {useEditorialMotion} from './editorial-motion';
 import {HairFlow} from './hair-flow';
 
 export function ProductPhoto({src,alt,hero=false,card=false}:{src:string;alt:string;hero?:boolean;card?:boolean}){
-  const original=/^\/assets\/colors\/([a-z-]+)\.jpg$/.test(src);
-  const bottleCard=card&&/^\/assets\/bottles\/[a-z-]+\.png$/.test(src);
-  if(bottleCard)return <img src={src} alt={alt} width={164} height={480} loading="lazy" decoding="async"
-    srcSet={[320,640,960].map((width,index)=>productImage(src,width)+' '+[240,480,720][index]+'w').join(',')}
-    sizes="(max-width:760px) 68px, 90px"/>;
-  return <img src={productImage(src)} alt={alt} width={960} height={960}
-    srcSet={original?[320,640,960].map(w=>productImage(src,w)+' '+w+'w').join(','):undefined}
-    sizes={hero?'(max-width:760px) 92vw, 48vw':'(max-width:760px) 44vw, (max-width:1100px) 29vw, 22vw'}
-    loading={hero?'eager':'lazy'} fetchPriority={hero?'high':'auto'}/>;
+  const bottle=/^\/assets\/bottles\/[a-z-]+\.png$/.test(src);
+  const legacy=/^\/assets\/colors\/[a-z-]+\.jpg$/.test(src);
+  const optimized=bottle||legacy;
+  const ref=useRef<HTMLImageElement>(null);
+  const [failedSource,setFailedSource]=useState('');
+  const useVariants=optimized&&failedSource!==src;
+  useEffect(()=>{
+    const image=ref.current;
+    // The initial optimized request can fail before the page hydrates.
+    if(useVariants&&image?.currentSrc&&image.complete&&!image.naturalWidth)setFailedSource(src);
+  },[src,useVariants]);
+  const srcSet=useVariants?[320,640,960].map((width,index)=>
+    productImage(src,width)+' '+(bottle?[240,480,720][index]:width)+'w').join(','):undefined;
+  const sizes=bottle
+    ? hero?'(max-width:760px) 116px, 180px':card?'(max-width:760px) 68px, 90px':'80px'
+    : hero?'(max-width:760px) 92vw, 48vw':'(max-width:760px) 44vw, (max-width:1100px) 29vw, 22vw';
+  return <img ref={ref} src={src} alt={alt} width={bottle?164:960} height={bottle?480:960}
+    srcSet={srcSet} sizes={srcSet?sizes:undefined} decoding="async"
+    loading={hero?'eager':'lazy'} fetchPriority={hero?'high':'auto'}
+    onError={useVariants?()=>setFailedSource(src):undefined}/>;
 }
 export function DirectionArrow({lang,size=18}:{lang:Language;size?:number}){return lang==='ar'?<ArrowUpLeft size={size}/>:<ArrowUpRight size={size}/>;}
 export function Sheet({title,kind='dialog',close,children}:{title:string;kind?:string;close:()=>void;children:ReactNode}){

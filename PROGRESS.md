@@ -94,3 +94,9 @@ Refined the existing storefront. Product cards use larger uncropped bottles, str
 Hero and section transitions are shorter. Coarse-pointer devices skip per-card reveals and the secondary hair layer. Reduced-motion and hidden-tab changes cancel running section reveals. Original artwork and store business logic were preserved.
 
 TypeScript and the production build passed. The redesign and repair suites passed 44 assertions. Chrome passed 32 product-card checks and 84 shade-strip and guide checks across Arabic RTL and English LTR at 320, 375, 390, 768, 1024 and 1440 px. Mobile testing used Chrome emulation. Screenshots and a hover recording were captured locally. No production deployment.
+
+## Storefront QA — product image checkpoint
+
+Both Black and Blue Black decoded on mobile and desktop before the change. Their original PNGs and responsive WebPs are tracked at the expected paths and no permanent missing asset was reproduced. ProductPhoto now recovers from failed optimized requests using the matching original, including failures before hydration. Added the Blue Black search alias without renaming the shade.
+
+The asset regression checked all 17 shades and 68 files with HTTP enabled. Chrome passed 176 catalog, image, cart and product-page checks, including original PNG recovery after deliberately blocking both shades' WebPs. TypeScript, production build and 31 redesign assertions passed. No original artwork or production data changed.
