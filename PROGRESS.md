@@ -78,3 +78,11 @@ Built the editorial homepage with original campaign imagery and catalog packagin
 The shop has a responsive catalog banner and desktop filter rail. Product detail, cart, checkout and receipt now share the editorial palette and commerce surfaces. The cart keeps its mobile dialog and gains a desktop order-summary column. Shade and checkout transitions respect reduced motion. Catalog, quantity, delivery, cash on delivery, checkout, order, receipt and privacy logic were preserved.
 
 Stage 2 passed TypeScript, the production build, 32 Chrome checks, 44 regression assertions and 50 local Worker commerce assertions using synthetic data. No production access or deployment.
+
+## Cinematic storefront, stage 3
+
+Finished the four-step bilingual application guide, the About Karin page, localized navigation and footer, and compact cart, search, and responsive refinements. The 40–50 minute display is explicitly marked for verification against the printed directions before release. The guide directs customers to follow the packaging.
+
+TypeScript, the production build and 44 regression assertions passed on the final tree. Final Chrome verification passed 180 checks over eight customer-facing surfaces at 320, 375, 390, 768, 1024 and 1440 px in Arabic RTL and English LTR, including cart-to-checkout, shade switching, mobile menu, filters, search, dark mode and privacy in a synthetic receipt. Mobile tests used device emulation. Screenshots and a recording of actual hover transitions were captured outside the repository.
+
+The development branch contains all three stages. No production deployment, asset replacement, schema changes, or new business claims.

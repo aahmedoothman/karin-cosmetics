@@ -53,16 +53,9 @@
   background:radial-gradient(ellipse at 48% 37%,#fff9fb 5%,transparent 62%);
   transition:opacity .6s ease;
 }
-.k-card-hair {
-  position:absolute;inset:0;width:100%;height:100%;pointer-events:none;
-  mask-image:linear-gradient(90deg,transparent,#000 13%,#000 87%,transparent);
-}
 .k-card-flow {transition:transform .8s cubic-bezier(.2,.65,.25,1),opacity .65s ease}
 .k-card-flow-soft {transform:translateY(22px) rotate(8deg);transform-origin:center;opacity:.22}
 .k-card-flow-main {transform:translateY(7px);opacity:.5}
-.k-card-flow-body {stroke:color-mix(in srgb,var(--shade,#ad1758) 31%,#f4dce6)}
-.k-card-strand {stroke:color-mix(in srgb,var(--shade,#ad1758) 77%,#38152a);stroke-width:1.2}
-.k-card-strand-shine {stroke:color-mix(in srgb,var(--shade,#ad1758) 26%,#fff6fc);stroke-width:2.1}
 .campaign-store .k-card-info {display:grid;grid-template-columns:minmax(0,1fr);justify-items:center;gap:3px;padding:10px 4px;flex:1;align-content:end}
 .campaign-store .k-card-info h3 {font-size:clamp(14px,1.45vw,20px);font-weight:700;line-height:1.45;overflow-wrap:anywhere;margin:0}
 .campaign-store .k-card-info strong {color:#901148;font-size:clamp(14px,1.4vw,19px);font-weight:750}

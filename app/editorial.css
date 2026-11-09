@@ -170,7 +170,7 @@
   .campaign-store :is(.karin-featured,.k-related) .k-product-grid {grid-template-columns:repeat(4,minmax(0,1fr))}
   .campaign-store .k-bag:has(.k-bag-summary) {
     display:grid;grid-template-columns:minmax(0,1.55fr) minmax(260px,1fr);grid-template-rows:auto minmax(0,1fr);
-    inset:0;margin:auto;width:min(1000px,94vw);height:min(710px,90dvh);border-radius:24px;border:1px solid var(--k-line);
+    inset:0;margin:auto;width:min(1000px,94vw);height:auto;min-height:min(360px,90dvh);max-height:min(710px,90dvh);border-radius:24px;border:1px solid var(--k-line);
   }
   .campaign-store .k-bag .k-sheet-head {grid-column:1/-1}
   .campaign-store .k-bag-summary {align-self:start;margin:20px 20px 20px 0;margin-inline:0 20px;border:1px solid var(--k-line);border-radius:18px;max-height:calc(min(710px,90dvh) - 108px);overflow:auto}
@@ -191,3 +191,60 @@
   .campaign-store .k-checkout-heading {margin-bottom:16px}
   .campaign-store .k-bag-summary h3 {font-size:16px;margin-bottom:4px}
 }
+
+/* Application guide and brand story */
+.campaign-store .karin-application {padding-block:clamp(12px,3vw,36px) 55px}
+.campaign-store .karin-application .k-guide-hero {
+  grid-template-columns:minmax(0,1fr) minmax(95px,.7fr);min-height:clamp(220px,28vw,390px);
+  background:linear-gradient(95deg,#20091cf5,#4d14308a 66%,#1d091ee6),url('/assets/campaign/hair.webp') center / cover;
+  border:1px solid #ae527c;border-radius:25px;
+}
+.karin-application .k-guide-hero h1 {color:var(--karin-gold)}
+.karin-application .k-guide-hero .k-button {margin-block-start:16px;background:#b60e51;color:white}
+.campaign-store .karin-application .k-guide-hero img {height:clamp(145px,23vw,300px)}
+.campaign-store .karin-application .k-guide-steps {grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;scroll-margin-top:20px}
+.campaign-store .karin-application .k-guide-steps li {padding:0;overflow:hidden}
+.karin-application .k-guide-steps li>div:last-child {padding:0 16px 17px}
+.karin-application .k-guide-icon {
+  padding:14px 16px;min-height:102px;color:#ffda9b;
+  background:linear-gradient(120deg,#270a21da,#76134b60),url('/assets/campaign/hair.webp') center 25% / cover;
+}
+.karin-application .k-guide-icon span {background:#9c1550;color:#fff;border:1px solid #ffa7ce}
+.karin-guide-duration {
+  display:flex;align-items:center;justify-content:center;gap:clamp(12px,3vw,34px);padding:clamp(16px,3vw,33px);
+  margin-block:20px;border-radius:22px;border:1px solid #b85282;color:#fff5fa;
+  background:linear-gradient(90deg,#270b22e8,#5b1137a8),url('/assets/campaign/hair.webp') center / cover;
+}
+.karin-guide-duration svg {flex:none;color:#f8ca89}
+.karin-guide-duration h2 {font-size:16px;margin:0}
+.karin-guide-duration strong {display:block;color:#ffdf9f;font-size:clamp(30px,5vw,49px);line-height:1.4}
+.karin-guide-duration p {margin:0;color:#f6d1e5;font-size:14px}
+.karin-application .k-guide-tips h2 {display:flex;align-items:center;gap:9px}
+.karin-application .k-guide-tips h2 svg {color:var(--k-gold)}
+.karin-about-page {padding-block:clamp(18px,4vw,54px)}
+.karin-about-hero {border:1px solid var(--k-line);border-radius:24px;overflow:hidden;align-items:center}
+.karin-about-hero picture {align-self:stretch}
+.karin-about-hero img {display:block}
+.karin-about-hero>div {padding:clamp(20px,4vw,54px)}
+.karin-about-hero h1 {font-size:clamp(35px,6vw,72px);line-height:1.25;margin:0}
+.karin-about-hero p,.karin-about-story p {max-width:56ch;line-height:1.8;color:var(--k-muted);margin-block:14px 22px}
+.karin-about-story {margin-block:22px 8px;padding:clamp(18px,4vw,44px);border:1px solid var(--k-line);border-radius:22px;background:var(--k-surface)}
+.karin-about-story h2 {font-size:clamp(26px,4vw,43px);margin:0}
+.karin-about-links {display:flex;gap:12px;flex-wrap:wrap}
+.karin-about-links a {display:inline-flex;align-items:center;gap:9px;min-height:44px;padding:6px 14px;border:1px solid var(--k-line);border-radius:999px;color:var(--k-gold);font-weight:650}
+@media (max-width:760px) {
+  .campaign-store .karin-application .k-guide-hero {grid-template-columns:minmax(0,1fr) minmax(62px,.35fr);min-height:0}
+  .campaign-store .karin-application .k-guide-hero img {max-height:clamp(110px,39vw,220px)}
+  .campaign-store .karin-application .k-guide-hero .k-button {font-size:13px;padding-inline:13px;min-height:44px}
+  .campaign-store .karin-application .k-guide-steps {grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .campaign-store .karin-application .k-guide-steps li {grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr;gap:10px}
+  .karin-application .k-guide-icon {min-height:64px;padding:10px;flex-direction:row}
+  .karin-application .k-guide-steps li>div:last-child {padding:0 10px 10px}
+  .karin-application .k-guide-steps p {font-size:13px}
+  .karin-about-hero {grid-template-columns:minmax(0,1fr)}
+  .karin-about-hero picture {aspect-ratio:1.65;overflow:hidden}
+}
+
+.campaign-store .k-footer .k-footer-bottom {direction:inherit;display:flex;grid-template-columns:none;color:#e4c5d5}
+.campaign-store .k-footer .k-footer-bottom small {color:#e4c5d5}
+.campaign-store .k-footer .k-footer-bottom>div {border:0}
