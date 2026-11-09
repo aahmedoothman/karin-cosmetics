@@ -68,3 +68,7 @@ The decorative SVG strands take their colour from each shade. On desktop, two la
 Verification: TypeScript and the production build passed. The local Chrome run passed 32 checks covering all 17 catalog entries, hover interpolation and exit, reduced motion, Arabic RTL and English LTR at 320, 375 and 390 px, cart adds and product navigation. The redesign regression suite passed 31 assertions and the repairs regression suite passed 13. The mobile checks used Chrome device emulation.
 
 Checkout, authentication and schemas were outside this change. No production resources were accessed or deployed. Existing administration work remains documented above.
+
+## Cinematic storefront, stage 1
+
+Built the editorial homepage with original campaign imagery and catalog packaging, all-shade discovery, a featured product preview, guide and brand teasers, a shared palette and a reduced-motion-aware reveal system. Product cards now animate shade-tinted photographic texture independently of the bottle. Stage 1 passed TypeScript, the production build, 31 redesign assertions and 32 Chrome checks for catalog mapping, card animation, reduced motion, mobile layouts, cart and links. Development branch only.

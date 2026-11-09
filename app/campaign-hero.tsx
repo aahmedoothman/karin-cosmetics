@@ -1,34 +1,37 @@
 'use client';
 import Link from 'next/link';
-import {ShoppingBag} from 'lucide-react';
+import {ArrowUpLeft, ArrowUpRight} from 'lucide-react';
 import {currency, productImage, type Language} from '../lib/storefront';
 
-export default function CampaignHero({products, locale}: {products: any[]; locale: Language}) {
-  const lineup = ['green', 'purple', 'gray', 'golden-yellow', 'fiery-red', 'brown', 'pink', 'blue', 'blue-black']
-    .map(id => products.find(product => product.id === id)).filter(Boolean);
-  const prices = products.map(product => product.price);
-  const samePrice = prices.length > 0 && prices.every(price => price === prices[0]);
+type CampaignProduct = {id: string; ar: string; en: string; image: string; price: number; hex: string};
+
+export default function CampaignHero({products, locale}: {products: CampaignProduct[]; locale: Language}) {
   const ar = locale === 'ar';
-  return <div className="campaign-hero-backdrop"><section className="campaign-hero">
-    <div className="campaign-copy">
-      <h1 dir="ltr">Crazy Colours <span>by <em>Karin</em></span></h1>
-      <p>{ar ? 'مجموعة ألوان الشعر' : 'The hair colour collection'}</p>
-      <h2>{ar ? 'اختَر درجتك المفضّلة' : 'Find your signature colour'}</h2>
-      {prices.length > 0 && <p className="campaign-price">{!samePrice && (ar ? 'تبدأ من ' : 'From ')}<strong>{currency(Math.min(...prices), locale)}</strong> <small>{ar ? 'للعبوة' : 'per bottle'}</small></p>}
-      <Link className="k-button" href={'/' + locale + '/shop'}><ShoppingBag size={24}/>{ar ? 'تسوّق الآن' : 'Shop now'}</Link>
+  const product = products.find(p => p.id === 'burgundy') ?? products[0];
+  const prices = products.map(p => p.price);
+  const Arrow = ar ? ArrowUpLeft : ArrowUpRight;
+  return <section className="karin-editorial-hero" aria-labelledby="campaign-title">
+    <div className="karin-hero-grid k-wrap">
+      <div className="karin-hero-copy">
+        <span className="karin-editorial-kicker" lang="en">KARIN / CRAZY COLORS</span>
+        <h1 id="campaign-title">{ar ? 'ألوان تعبّر عنك' : 'Colour that feels like you'}</h1>
+        <p>{ar ? 'من الدرجات الكلاسيكية إلى الألوان الجريئة، اختاري لونك من مجموعة كارين كريزي كولرز.' : 'From classic tones to vivid shades, find your colour in the Karin Crazy Colors collection.'}</p>
+        <div className="karin-hero-actions">
+          <Link className="k-button" href={'/'+locale+'/shop'}>{ar ? 'اكتشفي المجموعة' : 'Explore the collection'}<Arrow size={19}/></Link>
+          <Link className="karin-editorial-link" href={'/'+locale+'/how-to-use'}>{ar ? 'دليل الاستخدام' : 'Application guide'}</Link>
+        </div>
+        {prices.length > 0 && <small>{ar ? 'تبدأ العبوة من' : 'From'} <bdi>{currency(Math.min(...prices), locale)}</bdi></small>}
+      </div>
+      <div className="karin-hero-art">
+        <picture className="karin-hero-model" aria-hidden="true">
+          <source media="(max-width:760px)" srcSet="/assets/models/M03-480.webp"/>
+          <img src="/assets/models/M03-960.webp" alt="" width={960} height={1050} fetchPriority="high"/>
+        </picture>
+        <span className="karin-hero-orbit" aria-hidden="true"/>
+        {product && <Link className="karin-hero-product" href={'/'+locale+'/products/'+product.id} aria-label={ar ? product.ar : product.en}>
+          <picture><source media="(max-width:760px)" srcSet={productImage(product.image,320)}/><img src={productImage(product.image,640)} alt="" width={164} height={480}/></picture>
+        </Link>}
+      </div>
     </div>
-    <div className="campaign-stage" aria-label={ar ? 'مجموعة درجات كارين' : 'Karin shade collection'}>
-      <div className="campaign-bottles">{lineup.map((product, index) => {
-        const distance = Math.abs(index - (lineup.length - 1) / 2);
-        const scale = 1.3 - distance * 0.068;
-        return <Link key={product.id} href={'/' + locale + '/products/' + product.id} style={{'--bottle-scale': scale} as React.CSSProperties} aria-label={ar ? product.ar : product.en}>
-          <picture>
-            <source media="(max-width: 760px)" srcSet={productImage(product.image,240)}/>
-            <img src={productImage(product.image,480)} alt="" width={164} height={480} loading="eager"/>
-          </picture>
-        </Link>;
-      })}</div>
-      <div className="campaign-podium" aria-hidden="true"/>
-    </div>
-  </section></div>;
+  </section>;
 }

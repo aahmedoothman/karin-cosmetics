@@ -17,7 +17,6 @@
   color-scheme:light;
 }
 .campaign-store .k-header {position:relative;height:var(--campaign-header-height);background:#170617;border:0;color:#fff8fb}
-.campaign-store:has(.campaign-hero-backdrop) .k-header {background:transparent}
 .campaign-store .k-header-inner {direction:ltr;max-width:1380px}
 .campaign-store .k-desktop-nav {direction:rtl}
 .campaign-store[dir=ltr] .k-desktop-nav {direction:ltr}
@@ -28,29 +27,6 @@
 .campaign-store .k-logo img {position:absolute;width:178px;max-width:none;height:178px;top:-44px;left:-14px;object-fit:contain;mask-image:radial-gradient(ellipse 49% 30% at 50% 47%,#000 65%,transparent 100%)}
 .campaign-store .k-button {border-radius:999px;font-size:17px;font-weight:650;gap:12px;padding-inline:28px}
 .campaign-store .k-eyebrow {letter-spacing:.08em}
-.campaign-hero-backdrop {
-  margin-top:calc(0px - var(--campaign-header-height));padding-top:var(--campaign-header-height);
-  background:linear-gradient(180deg,transparent 70%,#170617),#170617 url('/assets/campaign/hair.webp') center top / cover no-repeat;
-}
-.campaign-hero {min-height:590px;max-width:1440px;margin:auto;padding:38px 4% 65px;display:grid;grid-template-columns:36% 64%;align-items:center;direction:ltr;color:#fff8fb;gap:0}
-.campaign-copy {text-align:center;z-index:2}
-.campaign-copy h1 {font:600 clamp(34px,4.5vw,66px)/1.1 'Sora',sans-serif;letter-spacing:-.04em}
-.campaign-copy h1>span {display:block;font:italic 32px/1.3 Georgia,serif;margin-top:4px}
-.campaign-copy h1 em {font:italic 700 clamp(48px,5vw,76px)/1.2 Georgia,serif;color:#ff81c8;display:inline-block;border-bottom:3px solid #ff32a4;transform:rotate(-5deg);text-shadow:0 2px 12px #21051b}
-.campaign-copy>p {font-size:26px;margin-top:28px}
-.campaign-copy h2 {display:inline-block;font-size:28px;background:linear-gradient(110deg,#e70c83,#a00865);border-radius:10px;padding:2px 18px;margin-top:8px}
-.campaign-copy .campaign-price {margin:26px 0;font-size:28px;direction:rtl}
-.campaign-copy .campaign-price small {font-size:17px}
-.campaign-copy .k-button {min-width:210px;color:#200316;background:#ff2a9c}
-.campaign-stage {align-self:end;position:relative;min-width:0;padding:0 18px 48px}
-.campaign-bottles {display:flex;align-items:end;justify-content:center;height:400px;position:relative;z-index:2;direction:ltr}
-.campaign-bottles a {height:100%;width:13%;margin-inline:-1.2%;display:flex;align-items:end;position:relative;filter:drop-shadow(3px 5px 4px #16000999);transition:transform .3s}
-.campaign-bottles a:nth-child(5) {z-index:5}
-.campaign-bottles a:hover {transform:translateY(-9px)}
-.campaign-bottles picture {display:block;width:100%;height:100%}
-.campaign-bottles img {width:100%;height:100%;object-fit:contain;object-position:center bottom;transform:scale(var(--bottle-scale,1));transform-origin:center bottom}
-.campaign-podium {height:72px;position:absolute;left:0;right:0;bottom:0;border-radius:50% / 22%;background:linear-gradient(90deg,#260320,#a51573 8%,#320525 20%,#1d031d 45%,#8e147f 75%,#230329);border:2px solid #ff58c7;box-shadow:0 5px 20px #df168979,0 -4px 20px #ff43bc66}
-.campaign-podium:before {content:'';position:absolute;inset:-16px -2px auto;height:35px;border-radius:50%;background:linear-gradient(110deg,#591240,#c5489f,#461442);border:2px solid #ffb0eb;box-shadow:0 0 16px #ff4fb6}
 .campaign-store .k-catalog {border:0;padding-top:35px}
 .campaign-store .k-section-heading {align-items:center}
 .campaign-store .k-product-grid {grid-template-columns:repeat(5,minmax(0,1fr));gap:22px}
@@ -165,27 +141,11 @@
 .k-guide-tips li::marker {color:var(--k-gold)}
 @media (min-width:761px) and (max-width:1100px) {
   .campaign-store .k-product-grid {grid-template-columns:repeat(3,minmax(0,1fr))}
-  .campaign-bottles {height:310px}.campaign-hero {min-height:500px}
-  .campaign-copy h2 {font-size:23px}.campaign-copy>p {font-size:22px}
 }
 @media(max-width:760px) {
   .campaign-store {--campaign-header-height:66px}
-  .campaign-hero-backdrop {background-position:60% top}
   .campaign-store .k-logo {width:84px;height:62px}
   .campaign-store .k-logo img {width:110px;height:110px;top:-23px;left:-13px}
-  .campaign-hero {grid-template-columns:minmax(0,1fr);gap:12px;padding:14px 5% 24px;min-height:0}
-  .campaign-copy {display:contents}
-  .campaign-copy h1 {text-align:center;font-size:clamp(28px,8vw,42px);grid-row:1;margin:0}
-  .campaign-copy h1>span {font-size:21px}
-  .campaign-copy h1 em {font-size:36px}
-  .campaign-copy>p:not(.campaign-price) {display:none}
-  .campaign-copy h2 {grid-row:2;text-align:center;font-size:18px;justify-self:center;margin:0}
-  .campaign-stage {grid-row:3;padding:0 6px 20px}
-  .campaign-bottles {height:clamp(150px,44vw,235px)}
-  .campaign-podium {height:32px}
-  .campaign-podium:before {height:18px;top:-7px}
-  .campaign-copy .campaign-price {grid-row:4;text-align:center;margin:0;font-size:22px}
-  .campaign-copy .k-button {grid-row:5;justify-self:center;width:min(100%,300px);min-height:48px}
   .campaign-store .k-catalog {padding-top:18px}
   .campaign-store .k-product-grid {grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
   .campaign-store .k-product-card {border-radius:18px;padding:5px 5px 7px}
@@ -261,8 +221,6 @@
 .campaign-receipt .receipt-steps li[aria-current] {border-color:var(--accent);color:var(--ink);background:var(--soft);font-weight:700}
 .campaign-store[dir=ltr] .campaign-copy .campaign-price {direction:ltr}
 @media(prefers-reduced-motion:reduce) {
-  .campaign-bottles a {transition:none}
-  .campaign-bottles a:hover {transform:none}
 }
 :root[data-motion=off] .campaign-bottles a {transition:none}
 :root[data-motion=off] .campaign-bottles a:hover {transform:none}

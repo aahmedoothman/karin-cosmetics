@@ -5,6 +5,7 @@ import "./karin-refinement.css";
 import "./commerce.css";
 import "./atelier.css";
 import "./campaign.css";
+import "./editorial.css";
 import {StoreProvider} from './store-provider';
 
 export const metadata: Metadata = {

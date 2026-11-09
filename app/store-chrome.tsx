@@ -7,6 +7,7 @@ import {currency,productImage,type Language} from '../lib/storefront';
 import {useStore} from './store-provider';
 import {api} from './ui';
 import {lastReceiptLink} from '../lib/browser';
+import {useEditorialMotion} from './editorial-motion';
 
 export function ProductPhoto({src,alt,hero=false,card=false}:{src:string;alt:string;hero?:boolean;card?:boolean}){
   const original=/^\/assets\/colors\/([a-z-]+)\.jpg$/.test(src);
@@ -30,6 +31,8 @@ export function Quantity({value,change,disabled=false,lang}:{value:number;change
 }
 export default function StoreChrome({children,lang,initial,checkout=false}:{children:ReactNode;lang:Language;initial:any;checkout?:boolean}){
   const s=useStore(),router=useRouter(),pathname=usePathname();
+  const root=useRef<HTMLDivElement>(null);
+  useEditorialMotion(root, pathname);
   const [menu,M]=useState(false),[search,S]=useState(false),[query,Q]=useState(''),[dark,D]=useState(false),[policy,P]=useState('');
   const [catalog,C]=useState(initial),[params,PARAMS]=useState(''),[receipt,RECEIPT]=useState('');const t=(ar:string,en:string)=>lang==='ar'?ar:en;
   useEffect(()=>{D(document.documentElement.dataset.theme==='dark');PARAMS(location.search);document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr';document.cookie='karin-language='+lang+';path=/;max-age=31536000;SameSite=Lax';},[lang,pathname]);
@@ -45,8 +48,8 @@ export default function StoreChrome({children,lang,initial,checkout=false}:{chil
   const messages:Record<string,string>={ATTEMPT_PENDING:t('هناك محاولة طلب لم تُحسم. استكملها أولًا للحفاظ على طلب واحد.','An order attempt is unresolved. Resume it first to keep a single order.'),QUANTITY_LIMIT:t('الحد الأقصى 20 عبوة لكل درجة في الطلب.','The maximum is 20 bottles per shade in one order.'),LINE_LIMIT:t('يمكن طلب 30 درجة مختلفة بحد أقصى في الطلب الواحد.','An order can contain up to 30 different shades.'),INVALID_ITEMS:t('راجع عدد الدرجات والكميات في الحقيبة.','Review the number of shades and quantities in your bag.'),ATTEMPT_CONFLICT:t('راجع الحقيبة ثم ابدأ محاولة جديدة.','Review your bag and start a new attempt.'),INVALID_ATTEMPT:t('راجع الحقيبة ثم ابدأ محاولة جديدة.','Review your bag and start a new attempt.'),PRICE_CHANGED:t('تغيّر السعر. راجع الأسعار المحدثة ثم تابع طلبك.','A price changed. Review the updated prices before continuing.'),PRODUCT_CHANGED:t('إحدى الدرجات غير متاحة. احذفها أو اختر بديلًا قبل المتابعة.','A shade is unavailable. Remove it or choose another before continuing.'),PAUSED:t('استقبال الطلبات متوقف مؤقتًا. يمكنك العودة لاحقًا.','Ordering is temporarily paused. Please return later.')};
   function focusBagTitle(){requestAnimationFrame(()=>document.querySelector<HTMLElement>('.k-bag .k-sheet-head h2')?.focus());}
   async function begin(){await s.begin(lang,catalog,C);}
-  const links=<><Link href={'/'+lang} onClick={()=>M(false)}>{t('الرئيسية','Home')}</Link><Link href={'/'+lang+'/shop'} onClick={()=>M(false)}>{t('تسوّق المجموعة','Shop the collection')}</Link><Link href={'/'+lang+'/how-to-use'} aria-current={pathname.endsWith('/how-to-use')?'page':undefined} onClick={()=>M(false)}>{t('طريقة الاستخدام','How to use')}</Link><a href={'/'+lang+'#assistance'} onClick={()=>M(false)}>{t('المساعدة والتواصل','Help & contact')}</a></>;
-  return <div className="atelier campaign-store" dir={lang==='ar'?'rtl':'ltr'}><a className="k-skip" href="#store-content">{t('انتقل للمحتوى','Skip to content')}</a>
+  const links=<><Link href={'/'+lang} aria-current={pathname==='/'+lang?'page':undefined} onClick={()=>M(false)}>{t('الرئيسية','Home')}</Link><Link href={'/'+lang+'/shop'} aria-current={pathname.endsWith('/shop')?'page':undefined} onClick={()=>M(false)}>{t('تسوّق المجموعة','Shop the collection')}</Link><Link href={'/'+lang+'/how-to-use'} aria-current={pathname.endsWith('/how-to-use')?'page':undefined} onClick={()=>M(false)}>{t('طريقة الاستخدام','How to use')}</Link><Link href={'/'+lang+'/about'} aria-current={pathname.endsWith('/about')?'page':undefined} onClick={()=>M(false)}>{t('عن كارين','About Karin')}</Link><a href={'/'+lang+'#assistance'} onClick={()=>M(false)}>{t('المساعدة والتواصل','Help & contact')}</a></>;
+  return <div ref={root} className="atelier campaign-store" dir={lang==='ar'?'rtl':'ltr'}><a className="k-skip" href="#store-content">{t('انتقل للمحتوى','Skip to content')}</a>
     <header className="k-header"><div className="k-header-inner"><Link className="k-logo" href={'/'+lang} aria-label="Karin — Home"><img src="/assets/campaign/logo-dark.webp" alt="Karin Natural Cosmetic" width={140} height={96}/></Link>{!checkout&&<nav className="k-desktop-nav" aria-label={t('التنقل الرئيسي','Main navigation')}>{links}</nav>}<div className="k-header-actions">
       {!checkout&&<button className="k-icon k-search-trigger" aria-label={t('البحث في المتجر','Search store')} onClick={()=>S(true)}><Search size={20}/></button>}
       <Link className="k-language" href={other} onClick={e=>{e.preventDefault();router.push(pathname.replace(/^\/(ar|en)(?=\/|$)/,lang==='ar'?'/en':'/ar')+location.search);}} aria-label={lang==='ar'?'Switch to English':'التبديل إلى العربية'}>{lang==='ar'?'EN':'ع'}</Link>
