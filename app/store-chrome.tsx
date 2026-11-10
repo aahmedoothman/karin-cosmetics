@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import {usePathname,useRouter} from 'next/navigation';
-import {useEffect,useRef,useState,type ReactNode} from 'react';
+import {useEffect,useRef,useState,type ReactNode,type RefObject} from 'react';
 import {ArrowUpLeft,ArrowUpRight,Check,Globe,Camera,Menu,Minus,Moon,Plus,Search,ShoppingBag,Sun,Trash2,X} from 'lucide-react';
 import {currency,productImage,type Language} from '../lib/storefront';
 import {useStore} from './store-provider';
@@ -33,9 +33,22 @@ export function ProductPhoto({src,alt,hero=false,card=false}:{src:string;alt:str
     onError={useVariants?()=>setFailedSource(src):undefined}/>;
 }
 export function DirectionArrow({lang,size=18}:{lang:Language;size?:number}){return lang==='ar'?<ArrowUpLeft size={size}/>:<ArrowUpRight size={size}/>;}
-export function Sheet({title,kind='dialog',close,children}:{title:string;kind?:string;close:()=>void;children:ReactNode}){
+export function Sheet({title,kind='dialog',close,children,restoreFocusTo}:{title:string;kind?:string;close:()=>void;children:ReactNode;restoreFocusTo?:RefObject<HTMLElement|null>}){
   const ref=useRef<HTMLDialogElement>(null),closeRef=useRef(close);closeRef.current=close;
-  useEffect(()=>{const previous=document.activeElement as HTMLElement;ref.current?.showModal();const overflow=document.body.style.overflow;document.body.style.overflow='hidden';return()=>{document.body.style.overflow=overflow;if(previous?.isConnected)previous.focus();};},[]);
+  useEffect(()=>{
+    const dialog=ref.current;
+    if(!dialog)return;
+    const previous=restoreFocusTo?.current ?? (document.activeElement as HTMLElement|null);
+    dialog.showModal();
+    if(kind==='search')dialog.querySelector<HTMLInputElement>('input[type=search]')?.focus({preventScroll:true});
+    const overflow=document.body.style.overflow;
+    document.body.style.overflow='hidden';
+    return()=>{
+      dialog.close();
+      document.body.style.overflow=overflow;
+      if(previous?.isConnected)previous.focus({preventScroll:true});
+    };
+  },[kind,restoreFocusTo]);
   return <dialog ref={ref} className={'k-sheet k-'+kind} aria-labelledby={'sheet-'+kind} onCancel={e=>{e.preventDefault();closeRef.current();}} onClick={e=>{if(e.target===ref.current)closeRef.current();}}><div className="k-sheet-head"><h2 tabIndex={-1} id={'sheet-'+kind}>{title}</h2><button className="k-icon" aria-label="إغلاق / Close" onClick={close}><X size={21}/></button></div>{children}</dialog>;
 }
 export function Quantity({value,change,disabled=false,lang}:{value:number;change:(n:number)=>void;disabled?:boolean;lang:Language}){
@@ -44,6 +57,7 @@ export function Quantity({value,change,disabled=false,lang}:{value:number;change
 export default function StoreChrome({children,lang,initial,checkout=false}:{children:ReactNode;lang:Language;initial:any;checkout?:boolean}){
   const s=useStore(),router=useRouter(),pathname=usePathname();
   const root=useRef<HTMLDivElement>(null);
+  const menuTrigger=useRef<HTMLButtonElement>(null),searchReturn=useRef<HTMLButtonElement|null>(null);
   useEditorialMotion(root, pathname);
   const [menu,M]=useState(false),[search,S]=useState(false),[query,Q]=useState(''),[dark,D]=useState(false),[policy,P]=useState('');
   const [catalog,C]=useState(initial),[params,PARAMS]=useState(''),[receipt,RECEIPT]=useState('');const t=(ar:string,en:string)=>lang==='ar'?ar:en;
@@ -63,9 +77,9 @@ export default function StoreChrome({children,lang,initial,checkout=false}:{chil
   const links=<><Link href={'/'+lang} aria-current={pathname==='/'+lang?'page':undefined} onClick={()=>M(false)}>{t('الرئيسية','Home')}</Link><Link href={'/'+lang+'/shop'} aria-current={pathname.endsWith('/shop')?'page':undefined} onClick={()=>M(false)}>{t('تسوّق المجموعة','Shop the collection')}</Link><Link href={'/'+lang+'/how-to-use'} aria-current={pathname.endsWith('/how-to-use')?'page':undefined} onClick={()=>M(false)}>{t('طريقة الاستخدام','How to use')}</Link><Link href={'/'+lang+'/about'} aria-current={pathname.endsWith('/about')?'page':undefined} onClick={()=>M(false)}>{t('عن كارين','About Karin')}</Link><a href={'/'+lang+'#assistance'} onClick={()=>M(false)}>{t('المساعدة والتواصل','Help & contact')}</a></>;
   return <div ref={root} className="atelier campaign-store" dir={lang==='ar'?'rtl':'ltr'}><a className="k-skip" href="#store-content">{t('انتقل للمحتوى','Skip to content')}</a>
     <header className="k-header"><div className="k-header-inner"><Link className="k-logo" href={'/'+lang} aria-label="Karin — Home"><img src="/assets/campaign/logo-dark.webp" alt="Karin Natural Cosmetic" width={140} height={96}/></Link>{!checkout&&<nav className="k-desktop-nav" aria-label={t('التنقل الرئيسي','Main navigation')}>{links}</nav>}<div className="k-header-actions">
-      {!checkout&&<button className="k-icon k-search-trigger" aria-label={t('البحث في المتجر','Search store')} onClick={()=>S(true)}><Search size={20}/></button>}
+      {!checkout&&<button className="k-icon k-search-trigger" aria-label={t('البحث في المتجر','Search store')} onClick={e=>{searchReturn.current=e.currentTarget;S(true);}}><Search size={20}/></button>}
       <Link className="k-language" href={other} onClick={e=>{e.preventDefault();router.push(pathname.replace(/^\/(ar|en)(?=\/|$)/,lang==='ar'?'/en':'/ar')+location.search);}} aria-label={lang==='ar'?'Switch to English':'التبديل إلى العربية'}>{lang==='ar'?'EN':'ع'}</Link>
-      <button className="k-icon" onClick={appearance} aria-label={t(dark?'الوضع الفاتح':'الوضع الداكن',dark?'Light mode':'Dark mode')}>{dark?<Sun size={20}/>:<Moon size={20}/>}</button><button className="k-icon k-bag-trigger" aria-label={t('حقيبة التسوق','Shopping bag')} onClick={()=>s.setBagOpen(true)}><ShoppingBag size={21}/>{count>0&&<span>{count}</span>}</button>{!checkout&&<button className="k-icon k-menu-trigger" aria-label={t('فتح القائمة','Open menu')} aria-haspopup="dialog" onClick={()=>M(true)}><Menu size={21}/></button>}
+      <button className="k-icon" onClick={appearance} aria-label={t(dark?'الوضع الفاتح':'الوضع الداكن',dark?'Light mode':'Dark mode')}>{dark?<Sun size={20}/>:<Moon size={20}/>}</button><button className="k-icon k-bag-trigger" aria-label={t('حقيبة التسوق','Shopping bag')} onClick={()=>s.setBagOpen(true)}><ShoppingBag size={21}/>{count>0&&<span>{count}</span>}</button>{!checkout&&<button className="k-icon k-menu-trigger" ref={menuTrigger} aria-label={t('فتح القائمة','Open menu')} aria-haspopup="dialog" onClick={()=>M(true)}><Menu size={21}/></button>}
     </div></div></header>{children}
     <footer className="k-footer" id="assistance">
       <span id="help" className="k-anchor"/>
@@ -90,8 +104,8 @@ export default function StoreChrome({children,lang,initial,checkout=false}:{chil
           </div>}
       </div>
       <div className="k-footer-bottom k-wrap"><small>© {new Date().getFullYear()} Karin Cosmetics</small><div>{receipt&&<a href={receipt}>{t('متابعة آخر طلب','Track your last order')}</a>}<button onClick={()=>P('privacy')}>{t('خصوصية بيانات الطلب','Order data privacy')}</button>{shop[lang==='ar'?'returnsAr':'returnsEn']&&<button onClick={()=>P('returns')}>{t('الإلغاء والاسترجاع','Cancellation & returns')}</button>}<Link href="/admin">{t('الإدارة','Admin')}</Link></div></div></footer>
-    {menu&&<Sheet title={t('القائمة','Menu')} kind="menu" close={()=>M(false)}><nav className="k-sheet-content k-mobile-links"><button className="k-text-button" onClick={()=>{M(false);S(true);}}><Search size={18}/>{t('البحث في المتجر','Search store')}</button>{links}</nav></Sheet>}
-    {search&&<Sheet title={t('ما الدرجة التي تبحث عنها؟','Find your shade')} kind="search" close={()=>S(false)}><form className="k-sheet-content k-search-form" onSubmit={e=>{e.preventDefault();S(false);router.push('/'+lang+'/shop'+(query?'?q='+encodeURIComponent(query):''));}}><label htmlFor="global-search">{t('اسم الدرجة أو اللون','Shade name or colour')}</label><input id="global-search" type="search" autoFocus value={query} onChange={e=>Q(e.target.value)} placeholder={t('مثل: موف، بني، أزرق','Try purple, brown, blue')}/><button className="k-button">{t('عرض النتائج','View results')}<Search size={18}/></button></form></Sheet>}
+    {menu&&<Sheet title={t('القائمة','Menu')} kind="menu" close={()=>M(false)}><nav className="k-sheet-content k-mobile-links"><button className="k-text-button" onClick={()=>{searchReturn.current=menuTrigger.current;M(false);S(true);}}><Search size={18}/>{t('البحث في المتجر','Search store')}</button>{links}</nav></Sheet>}
+    {search&&<Sheet title={t('ما الدرجة التي تبحث عنها؟','Find your shade')} kind="search" restoreFocusTo={searchReturn} close={()=>S(false)}><form className="k-sheet-content k-search-form" onSubmit={e=>{e.preventDefault();S(false);router.push('/'+lang+'/shop'+(query?'?q='+encodeURIComponent(query):''));}}><label htmlFor="global-search">{t('اسم الدرجة أو اللون','Shade name or colour')}</label><input id="global-search" type="search" value={query} onChange={e=>Q(e.target.value)} placeholder={t('مثل: موف، بني، أزرق','Try purple, brown, blue')}/><button className="k-button">{t('عرض النتائج','View results')}<Search size={18}/></button></form></Sheet>}
     {s.bagOpen&&<Sheet title={t('حقيبة التسوق','Your bag')} kind="bag" close={()=>s.setBagOpen(false)}><div className="k-bag-content">
       {!s.ready?<p role="status">{t('جارٍ تحميل الحقيبة…','Loading your bag…')}</p>:!lines.length&&!s.attempt?.uncertain?<div className="k-empty"><ShoppingBag size={40}/><h3>{t('مساحة لاختيارك القادم.','Room for your next colour.')}</h3><p>{t('اختر درجتك المفضلة من مجموعة Karin.','Find your shade in the Karin collection.')}</p><Link className="k-button" href={'/'+lang+'/shop'} onClick={()=>s.setBagOpen(false)}>{t('استكشف المجموعة','Explore the collection')}</Link></div>:<><p className="k-caption">{count} {t('عبوة في الحقيبة','bottles in your bag')}</p>{lines.map(x=><article className="k-bag-line" key={x.id}>{x.p?<Link className="karin-bag-photo" href={'/'+lang+'/products/'+x.id} style={{'--shade':x.p.hex} as React.CSSProperties} onClick={()=>s.setBagOpen(false)}><HairFlow/><ProductPhoto src={x.p.image} alt={lang==='ar'?x.p.ar:x.p.en}/></Link>:<div className="k-unavailable-photo">—</div>}<div><span className="k-eyebrow">KARIN COLOUR</span><h3>{lang==='ar'?(x.p?.ar||x.ar):(x.p?.en||x.en)}</h3><p>{x.p?currency(x.p.price,lang):t('غير متاح حاليًا','Currently unavailable')}</p><Quantity value={x.qty} lang={lang} disabled={!x.p||s.starting||!!s.attempt?.uncertain} change={n=>s.quantity(x.id,n)}/></div><button className="k-icon" aria-label={t('حذف ','Remove ')+(lang==='ar'?(x.p?.ar||x.ar):(x.p?.en||x.en))} disabled={s.starting||!!s.attempt?.uncertain} onClick={()=>{s.remove(x.id);focusBagTitle();}}><Trash2 size={17}/></button></article>)}</>}
       {s.removed&&<div className="k-undo" role="status"><Check size={16}/>{t('تمت إزالة الدرجة.','Shade removed.')}<button onClick={()=>{s.undo();focusBagTitle();}}>{t('تراجع','Undo')}</button></div>}{s.error&&<p className="k-error" role="alert">{messages[s.error]||t('تعذّر الاتصال. حاول مجددًا؛ اختياراتك محفوظة في الحقيبة.','Could not connect. Retry; your bag selections are saved.')}</p>}</div>
